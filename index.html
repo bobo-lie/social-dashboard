@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>脉络 · 社媒数据台</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div class="brand-text"><strong>脉络</strong><span>社媒数据台</span></div>
+    </div>
+    <nav class="tabs" id="navTabs">
+      <button data-view="dashboard" class="active">大屏</button>
+      <button data-view="traffic">流量</button>
+      <button data-view="calendar">日历</button>
+      <button data-view="insights">分析</button>
+      <button data-view="accounts">账号</button>
+      <button data-view="publish" class="nav-publish">发布中心 <span class="nav-dot"></span></button>
+    </nav>
+    <div class="top-right">
+      <span class="status"><i class="dot green"></i>数据已同步</span>
+      <span class="status"><i class="dot blue"></i>本地存储</span>
+      <button class="icon-btn" id="refreshBtn" title="刷新">↻</button>
+      <div class="clock" id="clock"></div>
+    </div>
+  </header>
+  <main id="mainContent"></main>
+  <footer class="foot">脉络 · 社媒数据台 · 数据保存在本机浏览器 · 平台数据为演示数据，接入真实账号需开放接口授权</footer>
+</div>
+<div id="modalRoot"></div>
+<script src="publish.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
