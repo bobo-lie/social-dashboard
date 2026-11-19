@@ -287,7 +287,7 @@ tbody tr:hover{background:#fafbff}
   'use strict';
   const API = 'http://127.0.0.1:8899';
   const $ = (s, r = document) => r.querySelector(s);
-  const $ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   let cfg = null, platforms = [], tasks = [], drafts = [], online = false;
@@ -314,7 +314,7 @@ tbody tr:hover{background:#fafbff}
       const r = await api('/api/tasks'); if (!r.ok) return;
       const running = tasks.some(t => t.status === 'running');
       tasks = r.tasks;
-      if (running || $('#publishTasks [data-status="running"]').length) renderTaskList();
+      if (running || $$('#publishTasks [data-status="running"]').length) renderTaskList();
     }, 1500);
   }
   function stopPolling() { if (pollTimer) clearInterval(pollTimer); pollTimer = null; }
@@ -497,7 +497,7 @@ tbody tr:hover{background:#fafbff}
     else alert('上传失败：' + r.error);
   }
 
-  function collectSelected() { return $('.plat-check input:checked').map(i => i.value); }
+  function collectSelected() { return $$('.plat-check input:checked').map(i => i.value); }
 
   async function launch() {
     const text = ($('#pubText') || {}).value || '';
@@ -555,9 +555,9 @@ tbody tr:hover{background:#fafbff}
     const t = e.target.closest('[data-pub]'); if (!t) return;
     const a = t.dataset.pub;
     if (a === 'retry') { await init(); render(); return; }
-    if (a === 'select-all') { $('.plat-check input').forEach(i => i.checked = true); $('.plat-check').forEach(x => x.classList.add('on')); persistSelection(); return; }
-    if (a === 'select-none') { $('.plat-check input').forEach(i => i.checked = false); $('.plat-check').forEach(x => x.classList.remove('on')); persistSelection(); return; }
-    if (a === 'select-overseas') { $('.plat-check').forEach(x => { const on = ['x','youtube','instagram','facebook','linkedin','tiktok','threads','reddit'].includes(x.dataset.pid); x.querySelector('input').checked = on; x.classList.toggle('on', on); }); persistSelection(); return; }
+    if (a === 'select-all') { $$('.plat-check input').forEach(i => i.checked = true); $$('.plat-check').forEach(x => x.classList.add('on')); persistSelection(); return; }
+    if (a === 'select-none') { $$('.plat-check input').forEach(i => i.checked = false); $$('.plat-check').forEach(x => x.classList.remove('on')); persistSelection(); return; }
+    if (a === 'select-overseas') { $$('.plat-check').forEach(x => { const on = ['x','youtube','instagram','facebook','linkedin','tiktok','threads','reddit'].includes(x.dataset.pid); x.querySelector('input').checked = on; x.classList.toggle('on', on); }); persistSelection(); return; }
     if (a === 'del-media') { pendingFiles.splice(+t.dataset.i, 1); renderMedia(); return; }
     if (a === 'launch') { await launch(); return; }
     if (a === 'run-task') { await runTask(t.dataset.id); return; }
@@ -629,7 +629,7 @@ tbody tr:hover{background:#fafbff}
 
   /* ============ 工具 ============ */
   const $ = (s, root = document) => root.querySelector(s);
-  const $ = (s, root = document) => Array.from(root.querySelectorAll(s));
+  const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
   const fmt = n => Math.round(n || 0).toLocaleString('en-US');
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const dateKey = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -1188,7 +1188,7 @@ tbody tr:hover{background:#fafbff}
   const VIEWS = { dashboard: viewDashboard, traffic: viewTraffic, calendar: viewCalendar, insights: viewInsights, accounts: viewAccounts };
   function render() {
     if (state.activeView === 'publish' && window.PublishCenter) {
-      $('#navTabs button').forEach(b => b.classList.toggle('active', b.dataset.view === 'publish'));
+      $$('#navTabs button').forEach(b => b.classList.toggle('active', b.dataset.view === 'publish'));
       const d = new Date(), wd = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()];
       $('#clock').textContent = `${d.getMonth() + 1}/${d.getDate()} ${wd} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
       window.PublishCenter.render();
@@ -1196,7 +1196,7 @@ tbody tr:hover{background:#fafbff}
     }
     if (window.PublishCenter) window.PublishCenter.stopPolling();
     $('#mainContent').innerHTML = VIEWS[state.activeView]();
-    $('#navTabs button').forEach(b => b.classList.toggle('active', b.dataset.view === state.activeView));
+    $$('#navTabs button').forEach(b => b.classList.toggle('active', b.dataset.view === state.activeView));
     const d = new Date(), wd = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()];
     $('#clock').textContent = `${d.getMonth() + 1}/${d.getDate()} ${wd} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   }
@@ -1278,7 +1278,7 @@ tbody tr:hover{background:#fafbff}
       return;
     }
   });
-  $('#navTabs button').forEach(b => b.addEventListener('click', () => {
+  $$('#navTabs button').forEach(b => b.addEventListener('click', () => {
     state.activeView = b.dataset.view; saveState(); render(); window.scrollTo({ top: 0, behavior: 'smooth' });
   }));
   $('#refreshBtn').addEventListener('click', () => { render(); toast('数据已刷新'); });

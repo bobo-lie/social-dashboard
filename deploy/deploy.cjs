@@ -82,14 +82,18 @@ async function fileHash(buf, file) {
   const htmlPath = path.join(DEPLOY_DIR, 'index.html');
   if (!fs.existsSync(htmlPath)) fail('缺少 deploy/index.html，请先运行 node deploy/build.cjs');
 
-  // 1. 推送源码到 GitHub
-  step(1, '推送源码到 GitHub');
-  try { run('git', ['remote', 'remove', 'origin'], { quiet: true }); } catch (_) {}
-  const authUrl = `https://x-access-token:${GH_TOKEN}@github.com/${GH_REPO}.git`;
-  run('git', ['remote', 'add', 'origin', authUrl], { quiet: true });
-  run('git', ['branch', '-M', 'main'], { quiet: true });
-  run('git', ['push', '-u', 'origin', 'main', '--force']);
-  console.log('  已推送: https://github.com/' + GH_REPO);
+  // 1. 推送源码到 GitHub（SKIP_GITHUB_PUSH=1 时跳过，例如已用 API 推送）
+  if (process.env.SKIP_GITHUB_PUSH === '1') {
+    step(1, '跳过 GitHub 推送（SKIP_GITHUB_PUSH=1，源码此前已通过 API 推送）');
+  } else {
+    step(1, '推送源码到 GitHub');
+    try { run('git', ['remote', 'remove', 'origin'], { quiet: true }); } catch (_) {}
+    const authUrl = `https://x-access-token:${GH_TOKEN}@github.com/${GH_REPO}.git`;
+    run('git', ['remote', 'add', 'origin', authUrl], { quiet: true });
+    run('git', ['branch', '-M', 'main'], { quiet: true });
+    run('git', ['push', '-u', 'origin', 'main', '--force']);
+    console.log('  已推送: https://github.com/' + GH_REPO);
+  }
 
   // 2. 获取 Account ID
   step(2, '获取 Cloudflare 账户信息');
@@ -112,7 +116,10 @@ async function fileHash(buf, file) {
 
   // 4. 构建 manifest + 上传 asset
   step(4, '构建 manifest 并上传文件');
-  const files = fs.readdirSync(DEPLOY_DIR).filter(f => fs.statSync(path.join(DEPLOY_DIR, f)).isFile());
+  // 只部署站点运行所需文件；构建/部署脚本属于工具源码，不应公开到站点根目录
+  const DEPLOY_WHITELIST = (process.env.DEPLOY_FILES || 'index.html').split(',').map(s => s.trim()).filter(Boolean);
+  const files = fs.readdirSync(DEPLOY_DIR).filter(f =>
+    DEPLOY_WHITELIST.includes(f) && fs.statSync(path.join(DEPLOY_DIR, f)).isFile());
   const manifest = {};       // "/index.html" -> hash
   const assetMap = {};       // hash -> { base64, contentType }
   for (const f of files) {
@@ -127,7 +134,7 @@ async function fileHash(buf, file) {
   const tokenRes = await cfFetch(
     `${CF_API}/accounts/${accountId}/pages/projects/${CF_PROJECT}/upload-token`
   );
-  const jwt = tokenRes.result;
+  const jwt = typeof tokenRes.result === 'string' ? tokenRes.result : (tokenRes.result && tokenRes.result.jwt);
   if (!jwt) fail('获取 upload-token 失败');
   console.log('  已获取上传令牌');
 
