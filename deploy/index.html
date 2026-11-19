@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>脉络 · 社媒数据台</title>
+<style>
+:root{
+  --bg1:#f6f5fc; --bg2:#fcf7f6; --bg3:#f3f7fd;
+  --card:#ffffff; --text:#1b1b2b; --muted:#9696ad; --line:#eeeff5;
+  --blue:#2f6bff; --green:#12a06a; --red:#e5484d; --orange:#f59e0b;
+  --purple:#7c5cff; --soft:#f5f6fb;
+  --shadow:0 6px 26px rgba(40,45,90,.055);
+  --shadow-lg:0 12px 40px rgba(40,45,90,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 48%,var(--bg3) 100%);
+  min-height:100vh;color:var(--text);-webkit-font-smoothing:antialiased;
+}
+.app{max-width:1560px;margin:0 auto;padding:16px 22px 24px}
+.topbar{
+  display:flex;align-items:center;gap:24px;height:62px;padding:0 18px;
+  background:rgba(255,255,255,.78);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.95);border-radius:18px;
+  box-shadow:var(--shadow);position:sticky;top:12px;z-index:50;margin-bottom:18px;
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:150px}
+.brand-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#3b6bff,#8b5cf6);color:#fff;display:grid;place-items:center;font-weight:800;font-size:17px;box-shadow:0 4px 12px rgba(80,80,220,.28)}
+.brand-text strong{display:block;font-size:16px;line-height:1.15;letter-spacing:.5px}
+.brand-text span{font-size:11px;color:var(--muted)}
+.tabs{display:flex;gap:3px;background:#f1f2f8;padding:4px;border-radius:12px}
+.tabs button{border:0;background:transparent;padding:7px 18px;border-radius:9px;font-size:13px;color:#72728c;cursor:pointer;font-weight:600;transition:.18s}
+.tabs button:hover{color:var(--text)}
+.tabs button.active{background:#fff;color:var(--text);box-shadow:0 2px 8px rgba(30,35,70,.08)}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:12px;color:#7b7b92}
+.status{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex:none}
+.dot.green{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.12)}
+.dot.blue{background:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.dot.orange{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.12)}
+.dot.gray{background:#c2c2d0}
+.dot.red{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.12)}
+.icon-btn{width:28px;height:28px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;color:#77778e;font-size:15px;transition:.18s}
+.icon-btn:hover{color:var(--blue);border-color:#cddaff}
+.clock{font-variant-numeric:tabular-nums;font-weight:700;color:#4c4c66;font-size:13px;white-space:nowrap}
+.foot{text-align:center;color:#aaaabc;font-size:11px;padding:8px 0 0}
+
+/* ---------- 通用 ---------- */
+.view-head{display:flex;align-items:flex-end;justify-content:space-between;margin:2px 2px 16px;gap:16px}
+.view-head h1{font-size:24px;letter-spacing:-.5px;font-weight:800}
+.view-head p{color:var(--muted);font-size:12.5px;margin-top:5px}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:12px;color:#7a7a92;cursor:pointer;transition:.18s;font-weight:600;white-space:nowrap}
+.pill:hover{border-color:#cfd9ff;color:var(--blue)}
+.pill.on{background:#1e1e2d;color:#fff;border-color:#1e1e2d}
+.card{background:var(--card);border-radius:20px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.9);padding:20px 22px}
+.card-title{font-size:15px;font-weight:800;letter-spacing:-.2px}
+.card-sub{font-size:11.5px;color:var(--muted)}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:14px}
+.grid{display:grid;gap:14px}
+.g-dash{grid-template-columns:1.28fr 1.12fr .92fr}
+.g-traffic{grid-template-columns:1.55fr 1fr}
+.g-insights{grid-template-columns:1fr 1fr}
+.mt14{margin-top:14px}
+.big-num{font-size:42px;font-weight:800;letter-spacing:-2px;line-height:1.05;font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:tabular-nums}
+.up{color:var(--green);font-weight:700}
+.down{color:var(--red);font-weight:700}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--soft);border-radius:999px;padding:5px 11px;font-size:11.5px;color:#6b6b84;font-weight:600}
+.chip strong{color:var(--text)}
+.sec-label{font-size:12px;font-weight:800;color:#5d5d78;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.sec-label::before{content:"";width:3px;height:12px;border-radius:3px;background:var(--blue)}
+
+/* ---------- 大屏 ---------- */
+.featured{display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:start}
+.cover{position:relative;width:190px;height:214px;border-radius:15px;background:linear-gradient(150deg,#fbf8ef,#f3eee0);box-shadow:0 8px 22px rgba(70,60,40,.10);overflow:hidden;padding:22px 16px;display:flex;flex-direction:column;justify-content:center}
+.cover .cv-badge{position:absolute;left:12px;top:12px;background:var(--blue);color:#fff;font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:999px}
+.cover .cv-title{font-size:23px;font-weight:800;line-height:1.32;letter-spacing:-.5px}
+.cover .cv-bar{width:52px;height:4px;background:linear-gradient(90deg,#7c5cff,#b6a5ff);border-radius:4px;margin:14px 0}
+.cover .cv-foot{position:absolute;bottom:14px;left:14px;right:14px;font-size:9.5px;color:#a09a8c;line-height:1.4}
+.cover .cv-live{position:absolute;right:10px;bottom:34px;background:rgba(255,255,255,.92);border-radius:999px;padding:5px 9px;font-size:10px;color:#3c8c62;font-weight:700;display:flex;align-items:center;gap:5px;box-shadow:0 3px 10px rgba(0,0,0,.07)}
+.date-pills{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.date-pill{font-size:11px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:#77778e;font-weight:600}
+.date-pill.on{background:#1e1e2d;color:#fff;border-color:#1e1e2d}
+.feat-title{font-size:20px;font-weight:800;letter-spacing:-.5px;line-height:1.3}
+.feat-meta{font-size:11.5px;color:var(--muted);margin:7px 0 14px}
+.plat-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:16px}
+.plat-num{display:flex;align-items:center;gap:7px;background:#f6f7fb;border-radius:9px;padding:7px 9px;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.picon{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;color:#fff;font-size:10px;font-weight:800;flex:none}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;border-top:1px solid var(--line);padding-top:13px}
+.metric .m-label{font-size:11px;color:var(--muted)}
+.metric .m-val{font-size:26px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1.2}
+.metric .m-val.sm{font-size:22px}
+.progress{height:5px;background:#edf0f7;border-radius:5px;overflow:hidden;margin-top:10px}
+.progress i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#3b82f6,#60a5fa)}
+.fans-num{font-size:44px;font-weight:800;letter-spacing:-2.5px;line-height:1;font-variant-numeric:tabular-nums;margin:2px 0 12px}
+.legend{display:flex;gap:9px;flex-wrap:wrap;font-size:10.5px;color:#77778e;align-items:center}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.chart-note{font-size:10.5px;color:#b0b0c2;margin-top:8px}
+.insight-list{display:flex;flex-direction:column;gap:9px}
+.insight{background:#f7f8fc;border-radius:12px;padding:11px 13px;font-size:11.5px;line-height:1.6;color:#61617a}
+.insight b{color:var(--text)}
+.insight .tag{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;margin-right:7px;vertical-align:1px}
+.tag.g{background:#e7f7ef;color:#16865c}.tag.b{background:#e9f0ff;color:#2f6bff}.tag.o{background:#fff1e0;color:#c47a10}
+
+.week-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+.stat{background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:16px 18px;display:flex;align-items:center;gap:13px;border:1px solid rgba(255,255,255,.9)}
+.stat .ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:17px;flex:none}
+.stat .lbl{font-size:11.5px;color:var(--muted);font-weight:600}
+.stat .val{font-size:23px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat .sub{font-size:10.5px;color:#a2a2b5}
+.mini-cover{width:38px;height:42px;border-radius:7px;background:linear-gradient(150deg,#fbf8ef,#efe9db);display:grid;place-items:center;font-size:9px;font-weight:800;color:#6d6a60;text-align:center;line-height:1.15;padding:3px;flex:none}
+
+.plat-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:11px;margin-top:14px}
+.pcard{background:#fff;border-radius:17px;box-shadow:var(--shadow);padding:14px 14px 12px;border:1px solid rgba(255,255,255,.9);min-width:0}
+.pcard .pc-head{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800}
+.pcard .pc-head .pname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcard .pc-head .picon{margin-left:auto;background:transparent!important;font-size:13px!important}
+.pcard .pc-follow{font-size:24px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;margin:10px 0 3px}
+.pcard .pc-label{font-size:10px;color:var(--muted)}
+.pcard .pc-chips{display:flex;gap:5px;margin:7px 0 2px;flex-wrap:wrap}
+.pcard .pc-chip{font-size:10px;background:#f5f6fa;border-radius:6px;padding:3px 7px;color:#77778e;font-weight:600}
+.pcard .pc-foot{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:8px;padding-top:8px;font-size:10px;color:#9a9ab0;gap:4px}
+.pcard .pc-foot b{display:block;color:var(--text);font-size:12px}
+
+/* ---------- 表格 ---------- */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;font-size:10.5px;color:#a3a3b6;font-weight:700;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px;border-bottom:1px solid #f4f4f8;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fafbff}
+.link{color:var(--blue);font-weight:700;cursor:pointer;font-size:11px}
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#16865c;font-weight:700}
+
+/* ---------- 流量 / 分析 ---------- */
+.chart-box{width:100%;overflow:hidden}
+.chart-box svg{display:block;width:100%;height:auto}
+.donut-wrap{display:flex;align-items:center;gap:18px}
+.donut-list{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
+.donut-item{display:flex;align-items:center;gap:8px;font-size:11.5px}
+.donut-item i{width:8px;height:8px;border-radius:50%;flex:none}
+.donut-item .nm{flex:1;color:#63637c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.donut-item b{font-variant-numeric:tabular-nums}
+.rec{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid var(--line)}
+.rec:last-child{border-bottom:0}
+.rec .rn{width:24px;height:24px;border-radius:8px;background:#eef3ff;color:var(--blue);display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
+.rec .rt{font-size:12px;line-height:1.6;color:#5e5e77}
+.rec .rt b{color:var(--text)}
+
+/* ---------- 日历 ---------- */
+.cal-head{display:flex;align-items:center;gap:10px}
+.cal-head button{width:30px;height:30px;border:1px solid var(--line);background:#fff;border-radius:9px;cursor:pointer;color:#666}
+.cal-title{font-size:17px;font-weight:800;min-width:110px;text-align:center}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.cal-dow{text-align:center;font-size:11px;color:var(--muted);padding:6px 0;font-weight:700}
+.cal-cell{background:#fff;border-radius:12px;min-height:106px;border:1px solid var(--line);padding:8px;cursor:pointer;transition:.15s}
+.cal-cell:hover{border-color:#cddaff;box-shadow:0 4px 14px rgba(50,80,200,.08)}
+.cal-cell.out{background:rgba(255,255,255,.35);opacity:.5}
+.cal-cell.today{background:#f2f6ff;border-color:#bcd0ff}
+.cal-day{font-size:11px;color:#8e8ea5;font-weight:700;margin-bottom:6px}
+.cal-cell.today .cal-day{color:var(--blue)}
+.cal-post{background:#f6f7fb;border-radius:7px;padding:5px 6px;margin-bottom:5px;font-size:10px;line-height:1.35;overflow:hidden}
+.cal-post .nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-post .mt{color:#9b9bb0;font-size:9.5px;margin-top:2px}
+.cal-more{font-size:9.5px;color:#a0a0b4}
+
+/* ---------- 账号 ---------- */
+.acc-list{display:flex;flex-direction:column}
+.acc-row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.acc-row:last-child{border-bottom:0}
+.acc-row .picon{width:32px;height:32px;font-size:13px;border-radius:9px}
+.acc-name{font-size:13px;font-weight:800}
+.acc-handle{font-size:11px;color:var(--muted)}
+.acc-fans{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+.btn{border:0;border-radius:9px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;transition:.18s;font-family:inherit}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(47,107,255,.22)}
+.btn-primary:hover{background:#2559e6}
+.btn-ghost{background:#f3f4f9;color:#66667f}
+.btn-ghost:hover{background:#e9ebf3}
+.btn-danger{background:#fff0f0;color:#d9454a}
+.form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:130px}
+.field label{font-size:11px;color:var(--muted);font-weight:700}
+.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:12.5px;font-family:inherit;color:var(--text);background:#fff;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#a9c0ff;box-shadow:0 0 0 3px rgba(47,107,255,.08)}
+.field textarea{width:100%;min-height:90px;resize:vertical;line-height:1.5}
+.hint{font-size:11px;color:var(--muted);line-height:1.6;background:#f7f8fc;border-radius:10px;padding:10px 12px}
+
+/* ---------- 弹窗 ---------- */
+.mask{position:fixed;inset:0;background:rgba(25,28,50,.32);backdrop-filter:blur(3px);display:grid;place-items:center;z-index:200;padding:20px}
+.modal{background:#fff;border-radius:20px;box-shadow:var(--shadow-lg);width:min(560px,100%);max-height:86vh;overflow:auto;padding:24px}
+.modal h3{font-size:18px;font-weight:800;margin-bottom:4px}
+.modal .mp{font-size:12px;color:var(--muted);margin-bottom:18px}
+.modal-foot{display:flex;justify-content:flex-end;gap:9px;margin-top:16px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#1e1e2d;color:#fff;padding:11px 20px;border-radius:999px;font-size:12.5px;z-index:300;box-shadow:0 8px 30px rgba(0,0,0,.2)}
+
+@media(max-width:1280px){
+  .g-dash{grid-template-columns:1fr 1fr}
+  .g-dash .card:last-child{grid-column:1/-1}
+  .plat-grid{grid-template-columns:repeat(4,1fr)}
+  .week-strip{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:900px){
+  .g-traffic,.g-insights{grid-template-columns:1fr}
+  .top-right .status{display:none}
+  .featured{grid-template-columns:1fr}
+  .cover{width:100%;height:180px}
+  .plat-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ============ 发布中心 ============ */
+.nav-publish{position:relative}
+.nav-dot{position:absolute;right:6px;top:6px;width:5px;height:5px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px #fff}
+.g-publish{grid-template-columns:1fr 1fr}
+.pub-alert{display:flex;align-items:center;gap:12px;background:#fff8ec;border:1px solid #ffe4b8;border-radius:13px;padding:11px 15px;margin-bottom:14px;font-size:12px;color:#9a6a20;line-height:1.6}
+.pub-alert b{color:#8a5b10;white-space:nowrap}
+.pub-upload{border:1.5px dashed #cbd6f5;border-radius:12px;background:#fafbff;padding:20px;text-align:center;cursor:pointer;transition:.18s;margin-top:10px}
+.pub-upload:hover,.pub-upload.drag{border-color:#6f92ff;background:#f2f6ff}
+.pu-icon{font-size:26px;color:#8aa6f5;line-height:1}
+.pu-main{font-size:12.5px;font-weight:700;color:#5c6b93;margin:6px 0 3px}
+.pu-sub{font-size:10.5px;color:#a6afca}
+.pub-media-list{display:flex;flex-direction:column;gap:6px;margin-top:9px}
+.media-item{display:flex;align-items:center;gap:8px;background:#f6f7fb;border-radius:8px;padding:7px 10px;font-size:11.5px}
+.mi-type{font-size:14px}.mi-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#4d4d66}
+.mi-size{color:#a0a0b4}.mi-del{cursor:pointer;color:#c4c4d2;font-weight:700;padding:0 3px}.mi-del:hover{color:#e5484d}
+.plat-group{margin-bottom:14px}
+.plat-group-title{font-size:10.5px;font-weight:800;color:#a0a0b5;letter-spacing:1px;margin-bottom:7px}
+.plat-check-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.plat-check{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:8px 9px;cursor:pointer;transition:.15s;position:relative;min-width:0}
+.plat-check:hover{border-color:#cddaff;background:#fafbff}
+.plat-check.on{border-color:#9db8ff;background:#f3f7ff}
+.plat-check input{position:absolute;opacity:0;pointer-events:none}
+.pc-ico{width:26px;height:26px;border-radius:7px;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
+.pc-txt{min-width:0;flex:1}.pc-txt b{display:block;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pc-txt small{font-size:9.5px;color:#a5a5b8}
+.pc-tick{font-size:12px;color:var(--blue);font-weight:800;opacity:0}
+.plat-check.on .pc-tick{opacity:1}
+.pub-launch{width:100%;margin-top:6px;padding:13px;font-size:14px}
+.pub-tip{font-size:10.5px;color:#a8a8ba;line-height:1.6;margin-top:9px;text-align:center}
+.task-row{border:1px solid var(--line);border-radius:11px;padding:11px 13px;margin-bottom:8px;background:#fff}
+.task-top{display:flex;align-items:center;gap:10px;font-size:12px}
+.task-top b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.task-detail{display:flex;gap:12px;font-size:10.5px;color:#9494aa;margin-top:7px;flex-wrap:wrap}
+.task-errors{margin-top:8px;background:#fff5f5;border-radius:7px;padding:7px 10px;font-size:10.5px;color:#c1555a;line-height:1.6}
+.task-links{display:flex;gap:10px;margin-top:7px;flex-wrap:wrap}
+.task-links a{font-size:10.5px;color:var(--blue);text-decoration:none}
+.switch-row{display:flex;align-items:center;gap:7px;font-size:12px;color:#66667f;cursor:pointer}
+.pub-logs{background:#1c2030;border-radius:10px;padding:11px 13px;max-height:180px;overflow:auto;font-family:Consolas,Monaco,monospace;font-size:10.5px;color:#b8c4e0;line-height:1.7}
+.pub-logs div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:1000px){.g-publish{grid-template-columns:1fr}.plat-check-grid{grid-template-columns:1fr 1fr}}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div class="brand-text"><strong>脉络</strong><span>社媒数据台</span></div>
+    </div>
+    <nav class="tabs" id="navTabs">
+      <button data-view="dashboard" class="active">大屏</button>
+      <button data-view="traffic">流量</button>
+      <button data-view="calendar">日历</button>
+      <button data-view="insights">分析</button>
+      <button data-view="accounts">账号</button>
+      <button data-view="publish" class="nav-publish">发布中心 <span class="nav-dot"></span></button>
+    </nav>
+    <div class="top-right">
+      <span class="status"><i class="dot green"></i>数据已同步</span>
+      <span class="status"><i class="dot blue"></i>本地存储</span>
+      <button class="icon-btn" id="refreshBtn" title="刷新">↻</button>
+      <div class="clock" id="clock"></div>
+    </div>
+  </header>
+  <main id="mainContent"></main>
+  <footer class="foot">脉络 · 社媒数据台 · 数据保存在本机浏览器 · 平台数据为演示数据，接入真实账号需开放接口授权</footer>
+</div>
+<div id="modalRoot"></div>
+<script>
+/* 发布中心前端 —— 挂到主工具的视图系统 */
+(function () {
+  'use strict';
+  const API = 'http://127.0.0.1:8899';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  let cfg = null, platforms = [], tasks = [], drafts = [], online = false;
+  let pollTimer = null;
+
+  async function api(path, opts = {}) {
+    try {
+      const res = await fetch(API + path, opts);
+      return await res.json();
+    } catch (e) { return { ok: false, error: '无法连接发布服务' }; }
+  }
+  async function init() {
+    const r = await api('/api/config');
+    if (r.ok) { cfg = r.config; platforms = r.platforms; online = true; await refreshTasks(); }
+    else { online = false; }
+  }
+  async function refreshTasks() {
+    const r = await api('/api/tasks'); if (r.ok) tasks = r.tasks;
+  }
+  function startPolling() {
+    stopPolling();
+    pollTimer = setInterval(async () => {
+      if (!online || !$('#publishTasks')) return;
+      const r = await api('/api/tasks'); if (!r.ok) return;
+      const running = tasks.some(t => t.status === 'running');
+      tasks = r.tasks;
+      if (running || $('#publishTasks [data-status="running"]').length) renderTaskList();
+    }, 1500);
+  }
+  function stopPolling() { if (pollTimer) clearInterval(pollTimer); pollTimer = null; }
+
+  /* ---------- 主视图 ---------- */
+  function viewPublish() {
+    if (!online) return offlineView();
+    const groups = ['海外', '国内'];
+    return `
+      <div class="view-head">
+        <div><h1>发布中心</h1><p>上传内容、勾选平台、一键自动发布 · 完成后微信推送结果</p></div>
+        <div class="pill-row">
+          <span class="chip"><i class="dot ${cfg.dryRun ? 'orange' : 'green'}"></i>${cfg.dryRun ? '演练模式 · 不真实发布' : '真实发布模式'}</span>
+          <button class="pill" data-pub="toggle-dry">${cfg.dryRun ? '切换到真实发布' : '切换到演练模式'}</button>
+        </div>
+      </div>
+
+      ${!cfg.wecomWebhook ? `<div class="pub-alert"><b>⚠ 还没有连微信</b><span>发布结果无法推送。到下方「发布设置」填入企业微信群机器人 Webhook，5 分钟搞定。</span></div>` : ''}
+
+      <section class="grid g-publish">
+        <!-- 左：内容编辑 -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">① 本次发布内容</div><div class="card-sub">文本 / 图片 / 视频</div></div>
+          <div class="field" style="margin-bottom:10px"><label>标题（YouTube / Reddit / Pinterest 用）</label><input id="pubTitle" placeholder="例如：10 个 Bot 组成的编辑部"></div>
+          <div class="field"><label>正文 / 文案</label><textarea id="pubText" style="min-height:130px" placeholder="粘贴这次要发的文案……"></textarea></div>
+          <div class="pub-upload" id="pubDrop">
+            <div class="pu-icon">＋</div>
+            <div class="pu-main">点击选择 或 拖拽文件到这里</div>
+            <div class="pu-sub">图片 jpg/png/webp · 视频 mp4/mov/webm · 可多选</div>
+            <input type="file" id="pubFiles" multiple accept="image/*,video/*" style="display:none">
+          </div>
+          <div id="pubMediaList" class="pub-media-list"></div>
+          <div class="form-row" style="margin-top:12px">
+            <div class="field"><label>计划发布时间（可留空立即执行）</label><input id="pubSchedule" type="datetime-local"></div>
+          </div>
+        </div>
+
+        <!-- 右：平台勾选 -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">② 发布平台</div>
+            <div class="pill-row" style="gap:5px">
+              <button class="pill" data-pub="select-all">全选</button>
+              <button class="pill" data-pub="select-overseas">仅海外</button>
+              <button class="pill" data-pub="select-none">清空</button>
+            </div>
+          </div>
+          ${groups.map(g => {
+            const ps = platforms.filter(p => p.group === g);
+            return `<div class="plat-group">
+              <div class="plat-group-title">${g}</div>
+              <div class="plat-check-grid">
+                ${ps.map(p => `<label class="plat-check ${selected(p.id) ? 'on' : ''}" data-pid="${p.id}">
+                  <input type="checkbox" value="${p.id}" ${selected(p.id) ? 'checked' : ''}>
+                  <span class="pc-ico" style="background:${p.color}">${p.icon}</span>
+                  <span class="pc-txt"><b>${esc(p.name)}</b><small>${stabText(p.stability)}</small></span>
+                  <span class="pc-tick">✓</span>
+                </label>`).join('')}
+              </div>
+            </div>`;
+          }).join('')}
+          <button class="btn btn-primary pub-launch" data-pub="launch">开始自动发布 →</button>
+          <div class="pub-tip">平台 UI 改版时自动化可能失败，失败会在下面列出并推送到微信，可单独重试。</div>
+        </div>
+      </section>
+
+      <section class="card mt14">
+        <div class="card-head"><div class="card-title">发布任务</div><div class="pill-row">
+          <button class="pill" data-pub="refresh-tasks">刷新</button>
+          <button class="pill" data-pub="clear-done">清理已完成</button>
+        </div></div>
+        <div id="publishTasks"></div>
+      </section>
+
+      <section class="grid g-publish mt14">
+        <div class="card">
+          <div class="card-head"><div class="card-title">发布设置</div><div class="card-sub">本地保存</div></div>
+          <div class="field"><label>企业微信群机器人 Webhook</label><input id="cfgWebhook" value="${esc(cfg.wecomWebhook)}" placeholder="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=..."></div>
+          <div class="hint" style="margin:10px 0">微信里建个群 → 群设置 → 群机器人 → 添加 → 复制 Webhook 地址粘贴到这里。<button class="link" data-pub="test-wecom">发送测试消息</button></div>
+          <div class="form-row">
+            <div class="field"><label>平台间间隔（毫秒）</label><input id="cfgDelay" type="number" min="1000" step="500" value="${cfg.publishDelayMs}"></div>
+            <div class="field" style="max-width:120px"><label>失败重试次数</label><input id="cfgRetry" type="number" min="0" max="3" value="${cfg.maxRetries}"></div>
+          </div>
+          <div class="form-row">
+            <label class="switch-row"><input type="checkbox" id="cfgHeadless" ${cfg.headless ? 'checked' : ''}> 无头模式（不弹 Chrome 窗口）</label>
+          </div>
+          <button class="btn btn-primary" data-pub="save-config">保存设置</button>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">运行日志</div><div class="pill-row"><button class="pill" data-pub="refresh-logs">刷新</button><button class="pill" data-pub="close-browser">关闭 Chrome</button></div></div>
+          <div id="pubLogs" class="pub-logs"></div>
+          <div class="hint" style="margin-top:10px"><b>首次使用：</b>关闭「演练模式」后第一次真实发布，Chrome 会弹出各平台登录页，请手动登录一次（每平台一次即可）。之后登录态会被记住，无需重复。</div>
+        </div>
+      </section>`;
+  }
+
+  function stabText(s) { return { stable: '较稳定', beta: '测试中', experimental: '实验', manual: '需人工点发布' }[s] || s; }
+  function selected(id) {
+    const el = $(`.plat-check[data-pid="${id}"] input`);
+    if (el) return el.checked;
+    return (cfg && cfg.selectedPlatforms || []).includes(id);
+  }
+
+  function offlineView() {
+    const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+    const h1 = local ? '发布服务没有启动' : '线上版 · 自动发布需本机运行';
+    const body = local
+      ? `双击项目目录里的 <b>启动发布中心.bat</b>，<br>看到「发布中心已启动」后刷新本页即可。<br><br>发布服务负责驱动你本机的 Chrome 和推送微信通知，<br>数据全部在你本机，不上传任何服务器。`
+      : `当前是部署在云端的只读数据看板。<br>自动发布要驱动<b>你自己电脑上的 Chrome 和登录态</b>，<br>这一步只能在本地完成，无法放在云服务器上。<br><br>在本机运行项目里的 <b>启动发布中心.bat</b>，<br>即可解锁完整的自动发布 + 微信通知功能。数据依然全在本机。`;
+    return `<div class="view-head"><div><h1>发布中心</h1><p>${local ? '自动发布需要本地服务运行中' : '线上只读版 · 发布功能请在本机使用'}</p></div></div>
+      <div class="card" style="max-width:640px;margin:40px auto;text-align:center;padding:48px">
+        <div style="font-size:44px;margin-bottom:14px">${local ? '🔌' : '☁️'}</div>
+        <div class="card-title" style="font-size:19px;margin-bottom:10px">${h1}</div>
+        <p class="card-sub" style="line-height:1.8;margin-bottom:20px">${body}</p>
+        <button class="btn btn-ghost" data-pub="retry">${local ? '重新检测连接' : '重新检测'}</button>
+      </div>`;
+  }
+
+  /* ---------- 任务列表 ---------- */
+  function renderTaskList() {
+    const box = $('#publishTasks'); if (!box) return;
+    if (!tasks.length) { box.innerHTML = '<div class="hint">还没有发布任务。上面填好内容和平台后点「开始自动发布」。</div>'; return; }
+    box.innerHTML = tasks.slice(0, 20).map(t => {
+      const statusMap = {
+        pending: ['待执行', 'gray'], running: ['发布中…', 'blue'],
+        done: ['已完成', 'green'], partial: ['部分失败', 'orange'], failed: ['失败', 'red']
+      };
+      const [label, dot] = statusMap[t.status] || [t.status, 'gray'];
+      const ok = (t.results || []).filter(r => r.status === 'success');
+      const fail = (t.results || []).filter(r => r.status === 'failed');
+      const skip = (t.results || []).filter(r => r.status === 'skipped');
+      return `<div class="task-row" data-status="${t.status}">
+        <div class="task-top">
+          <span class="status-badge"><i class="dot ${dot}"></i>${label}</span>
+          <b>${esc(t.title)}</b>
+          <span class="card-sub">${new Date(t.createdAt).toLocaleString('zh-CN')}</span>
+          <span style="margin-left:auto;display:flex;gap:6px">
+            ${t.status === 'pending' ? `<button class="btn btn-ghost" data-pub="run-task" data-id="${t.id}">执行</button>` : ''}
+            <button class="btn btn-ghost" data-pub="del-task" data-id="${t.id}">删除</button>
+          </span>
+        </div>
+        <div class="task-detail">
+          <span>平台 ${t.platforms.length}</span>
+          ${t.results.length ? `<span class="up">成功 ${ok.length}</span>` : ''}
+          ${fail.length ? `<span class="down">失败 ${fail.length}</span>` : ''}
+          ${skip.length ? `<span>跳过 ${skip.length}</span>` : ''}
+          ${t.notified ? '<span class="up">✓ 已推微信</span>' : (t.notifyError ? `<span class="down">微信推送失败</span>` : '')}
+          ${t.scheduledAt ? `<span>定时 ${esc(t.scheduledAt)}</span>` : ''}
+        </div>
+        ${fail.length ? `<div class="task-errors">${fail.map(r => `<div><b>${r.platformName}</b>：${esc(r.error)}</div>`).join('')}</div>` : ''}
+        ${ok.filter(r => r.url).length ? `<div class="task-links">${ok.filter(r => r.url).map(r => `<a href="${esc(r.url)}" target="_blank">${r.platformName} ↗</a>`).join('')}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  async function loadLogs() {
+    const box = $('#pubLogs'); if (!box) return;
+    const r = await api('/api/logs');
+    box.innerHTML = r.ok && r.lines.length ? r.lines.slice().reverse().map(l => `<div>${esc(l)}</div>`).join('') : '<div class="card-sub">暂无日志</div>';
+  }
+
+  /* ---------- 交互 ---------- */
+  let pendingFiles = [];
+
+  function renderMedia() {
+    const box = $('#pubMediaList'); if (!box) return;
+    box.innerHTML = pendingFiles.map((f, i) => `<div class="media-item">
+      <span class="mi-type">${/\.(mp4|mov|webm)$/i.test(f.originalName) ? '🎬' : '🖼'}</span>
+      <span class="mi-name">${esc(f.originalName)}</span>
+      <span class="mi-size">${(f.size / 1024 / 1024).toFixed(1)} MB</span>
+      <span class="mi-del" data-pub="del-media" data-i="${i}">✕</span>
+    </div>`).join('');
+  }
+
+  async function uploadFiles(fileList) {
+    const fd = new FormData();
+    Array.from(fileList).forEach(f => fd.append('files', f));
+    const r = await api('/api/media', { method: 'POST', body: fd });
+    if (r.ok) { pendingFiles.push(...r.files); renderMedia(); }
+    else alert('上传失败：' + r.error);
+  }
+
+  function collectSelected() { return $('.plat-check input:checked').map(i => i.value); }
+
+  async function launch() {
+    const text = ($('#pubText') || {}).value || '';
+    const title = ($('#pubTitle') || {}).value || '';
+    const platformsSel = collectSelected();
+    if (!text.trim() && !pendingFiles.length) { alert('请填写文案或上传至少一个文件'); return; }
+    if (!platformsSel.length) { alert('请至少勾选一个平台'); return; }
+    const scheduledAt = ($('#pubSchedule') || {}).value || null;
+    const r = await api('/api/tasks', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, text, media: pendingFiles, platforms: platformsSel, scheduledAt })
+    });
+    if (!r.ok) { alert('创建任务失败：' + r.error); return; }
+    pendingFiles = []; renderMedia();
+    $('#pubText').value = ''; $('#pubTitle').value = '';
+    await refreshTasks(); renderTaskList();
+    if (!cfg.dryRun || confirm('任务已创建。演练模式下不会真实发布，是否立即执行演练？\n（点「取消」则只保存待办）')) {
+      await runTask(r.task.id);
+    }
+  }
+
+  async function runTask(id) {
+    const r = await api(`/api/tasks/${id}/publish`, { method: 'POST' });
+    if (!r.ok) { alert('启动失败：' + r.error); return; }
+    await refreshTasks(); renderTaskList();
+  }
+
+  async function saveConfig() {
+    const patch = {
+      wecomWebhook: $('#cfgWebhook').value.trim(),
+      publishDelayMs: +$('#cfgDelay').value || 4500,
+      maxRetries: +$('#cfgRetry').value || 0,
+      headless: $('#cfgHeadless').checked
+    };
+    const r = await api('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) });
+    if (r.ok) { cfg = r.config; alert('设置已保存'); }
+  }
+
+  async function toggleDry() {
+    const r = await api('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ dryRun: !cfg.dryRun }) });
+    if (r.ok) { cfg = r.config; render(); }
+  }
+
+  function render() {
+    const main = $('#mainContent');
+    // 只负责发布视图，其余由 app.js 渲染
+    if (!main || document.querySelector('#navTabs button.active')?.dataset.view !== 'publish') return;
+    main.innerHTML = viewPublish();
+    renderTaskList(); loadLogs();
+    startPolling();
+  }
+
+  /* 事件委托 */
+  document.addEventListener('click', async e => {
+    const t = e.target.closest('[data-pub]'); if (!t) return;
+    const a = t.dataset.pub;
+    if (a === 'retry') { await init(); render(); return; }
+    if (a === 'select-all') { $('.plat-check input').forEach(i => i.checked = true); $('.plat-check').forEach(x => x.classList.add('on')); persistSelection(); return; }
+    if (a === 'select-none') { $('.plat-check input').forEach(i => i.checked = false); $('.plat-check').forEach(x => x.classList.remove('on')); persistSelection(); return; }
+    if (a === 'select-overseas') { $('.plat-check').forEach(x => { const on = ['x','youtube','instagram','facebook','linkedin','tiktok','threads','reddit'].includes(x.dataset.pid); x.querySelector('input').checked = on; x.classList.toggle('on', on); }); persistSelection(); return; }
+    if (a === 'del-media') { pendingFiles.splice(+t.dataset.i, 1); renderMedia(); return; }
+    if (a === 'launch') { await launch(); return; }
+    if (a === 'run-task') { await runTask(t.dataset.id); return; }
+    if (a === 'del-task') { await api(`/api/tasks/${t.dataset.id}`, { method: 'DELETE' }); await refreshTasks(); renderTaskList(); return; }
+    if (a === 'refresh-tasks') { await refreshTasks(); renderTaskList(); return; }
+    if (a === 'clear-done') { for (const task of tasks.filter(x => ['done','partial'].includes(x.status))) await api(`/api/tasks/${task.id}`, { method: 'DELETE' }); await refreshTasks(); renderTaskList(); return; }
+    if (a === 'save-config') { await saveConfig(); return; }
+    if (a === 'toggle-dry') { await toggleDry(); return; }
+    if (a === 'refresh-logs') { await loadLogs(); return; }
+    if (a === 'close-browser') { await api('/api/browser/close', { method: 'POST' }); return; }
+    if (a === 'test-wecom') {
+      const hook = $('#cfgWebhook').value.trim();
+      const r = await api('/api/test/wecom', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ webhook: hook }) });
+      alert(r.ok ? '测试消息已推送，去群里看看' : '推送失败：' + r.error); return;
+    }
+  });
+
+  document.addEventListener('change', e => {
+    if (e.target.matches('.plat-check input')) {
+      e.target.closest('.plat-check').classList.toggle('on', e.target.checked);
+      persistSelection();
+    }
+  });
+
+  function persistSelection() {
+    const sel = collectSelected();
+    api('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ selectedPlatforms: sel }) })
+      .then(r => { if (r.ok) cfg = r.config; });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const drop = document.getElementById('pubDrop');
+    if (drop) {
+      drop.addEventListener('click', () => $('#pubFiles').click());
+      drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag'); });
+      drop.addEventListener('dragleave', () => drop.classList.remove('drag'));
+      drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('drag'); uploadFiles(e.dataTransfer.files); });
+      $('#pubFiles').addEventListener('change', e => uploadFiles(e.target.files));
+    }
+  });
+
+  /* 供 app.js 调用 */
+  window.PublishCenter = {
+    init, render, viewPublish, refresh: async () => { await init(); render(); },
+    isOnline: () => online,
+    stopPolling
+  };
+})();
+
+</script>
+<script>
+/* 脉络 · 社媒数据台 — 本地单页应用 */
+(function () {
+  'use strict';
+
+  /* ============ 平台定义 ============ */
+  const PLATFORMS = [
+    { key: 'bilibili', name: 'B站',      glyph: 'B',  color: '#00A1D6', bg: '#E8F7FD' },
+    { key: 'douyin',   name: '抖音',     glyph: '抖', color: '#18181B', bg: '#F0F0F2' },
+    { key: 'xhs',      name: '小红书',   glyph: '红', color: '#FF2442', bg: '#FFECEF' },
+    { key: 'sph',      name: '视频号',   glyph: '视', color: '#FA9D3B', bg: '#FFF2E4' },
+    { key: 'youtube',  name: 'YouTube',  glyph: '▶', color: '#FF0033', bg: '#FFE9EC' },
+    { key: 'x',        name: 'X',        glyph: 'X',  color: '#18181B', bg: '#F0F0F2' },
+    { key: 'course',   name: '课程站',   glyph: '课', color: '#6C5CE7', bg: '#EFECFF' }
+  ];
+  const PMAP = Object.fromEntries(PLATFORMS.map(p => [p.key, p]));
+  const KEYS = PLATFORMS.map(p => p.key);
+  const STORE_KEY = 'mailuo-social-dashboard-v2';
+
+  /* ============ 工具 ============ */
+  const $ = (s, root = document) => root.querySelector(s);
+  const $ = (s, root = document) => Array.from(root.querySelectorAll(s));
+  const fmt = n => Math.round(n || 0).toLocaleString('en-US');
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const dateKey = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
+  const engRate = st => {
+    if (!st || !st.views) return 0;
+    return ((st.likes + st.comments + st.saves + st.shares) / st.views) * 100;
+  };
+  const sum = arr => arr.reduce((a, b) => a + b, 0);
+  const picon = (key, extra = '') => {
+    const p = PMAP[key] || { color: '#999', bg: '#f0f0f4', glyph: '?' };
+    return `<span class="picon" style="background:${p.bg};color:${p.color};${extra}">${p.glyph}</span>`;
+  };
+  const trunc = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(0, n) + '…' : s; };
+
+  /* ============ 演示数据 ============ */
+  function genHistory(followers, days = 30) {
+    const out = [], base = Math.max(1, followers * 0.0017);
+    for (let i = days - 1; i >= 0; i--) {
+      const d = addDays(today(), -i);
+      let v = Math.round(base * (0.4 + Math.random() * 1.7));
+      if (Math.random() < 0.09) v = Math.round(v * 2.3);
+      out.push({ date: dateKey(d), delta: v });
+    }
+    return out;
+  }
+  function makeStats(total, weights) {
+    const w = weights || [0.09, 0.32, 0.17, 0.07, 0.03, 0.31, 0.01];
+    const views = w.map(x => Math.round(total * x));
+    views[0] += total - sum(views);
+    const out = {};
+    KEYS.forEach((k, i) => {
+      const v = Math.max(0, views[i]);
+      out[k] = {
+        views: v,
+        likes: Math.round(v * (0.018 + Math.random() * 0.022)),
+        comments: Math.round(v * (0.003 + Math.random() * 0.004)),
+        saves: Math.round(v * (0.006 + Math.random() * 0.012)),
+        shares: Math.round(v * (0.002 + Math.random() * 0.005))
+      };
+    });
+    return out;
+  }
+  function seedState() {
+    const followers = { bilibili: 16139, douyin: 12863, xhs: 19475, sph: 4601, youtube: 325, x: 6042, course: 3433 };
+    const accounts = PLATFORMS.map((p, i) => ({
+      id: 'acc_' + p.key, platform: p.key,
+      name: p.name + ' · 主账号', handle: '@mailuo_' + p.key,
+      followers: followers[p.key], history: genHistory(followers[p.key])
+    }));
+    const P = (daysAgo, title, total, status, weights) => {
+      const d = addDays(today(), -daysAgo);
+      return {
+        id: 'post_' + Math.random().toString(36).slice(2, 9),
+        title, date: dateKey(d), time: '18:00', status: status || '已发布',
+        cover: title, stats: makeStats(total, weights)
+      };
+    };
+    const posts = [
+      P(2, '10 个 Bot 组成的编辑部', 7005, '已发布', [609 / 7005, 2245 / 7005, 1177 / 7005, 464 / 7005, 202 / 7005, 2240 / 7005, 68 / 7005]),
+      P(4, '我的 Agent 记', 6181),
+      P(6, '给爸妈做一个防诈骗助手', 20993),
+      P(9, 'AI 剪辑实测：嘟嘟', 9840),
+      P(12, '帮我读完 50 本书', 16216),
+      P(16, '用 AI 做一支产品', 12480),
+      P(20, '微信读书助手', 7310),
+      P(25, '一场 AI 直播复盘', 5320),
+      { id: 'post_f1', title: '把微信群聊交给 AI', date: dateKey(today()), time: '18:00', status: '等待点布', cover: '把微信群聊交给 AI', stats: makeStats(0) },
+      { id: 'post_f2', title: 'AI 剪辑实测：第二期', date: dateKey(addDays(today(), 2)), time: '18:00', status: '计划中', cover: 'AI 剪辑实测：第二期', stats: makeStats(0) }
+    ];
+    return { accounts, posts, activeView: 'dashboard', range: 7, month: { y: today().getFullYear(), m: today().getMonth() } };
+  }
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s.accounts && s.posts) return Object.assign(seedState(), s);
+      }
+    } catch (e) { /* ignore */ }
+    return seedState();
+  }
+  let state = loadState();
+  function saveState() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+  }
+
+  /* ============ 派生计算 ============ */
+  function historyOf(key) {
+    const map = {};
+    state.accounts.filter(a => a.platform === key).forEach(a =>
+      (a.history || []).forEach(h => { map[h.date] = (map[h.date] || 0) + (h.delta || 0); })
+    );
+    return Object.keys(map).sort().map(d => ({ date: d, delta: map[d] }));
+  }
+  function allHistory() {
+    const map = {};
+    state.accounts.forEach(a => (a.history || []).forEach(h => { map[h.date] = (map[h.date] || 0) + (h.delta || 0); }));
+    return Object.keys(map).sort().map(d => ({ date: d, delta: map[d] }));
+  }
+  function totalFans() { return sum(state.accounts.map(a => +a.followers || 0)); }
+  function gain(days) { return sum(allHistory().slice(-days).map(h => h.delta)); }
+  function published() { return state.posts.filter(p => p.status === '已发布'); }
+  function postTotal(p) { return sum(KEYS.map(k => (p.stats[k] || {}).views || 0)); }
+  function postEngagement(p) {
+    const s = KEYS.reduce((acc, k) => {
+      const x = p.stats[k] || {};
+      ['likes', 'comments', 'saves', 'shares'].forEach(f => { acc[f] = (acc[f] || 0) + (x[f] || 0); });
+      return acc;
+    }, {});
+    return { ...s, views: postTotal(p), rate: engRate({ ...s, views: postTotal(p) }) };
+  }
+  function recentPosts(days) {
+    const from = dateKey(addDays(today(), -days + 1));
+    return published().filter(p => p.date >= from && p.date <= dateKey(today()));
+  }
+  function platformAgg(key) {
+    const accs = state.accounts.filter(a => a.platform === key);
+    const h = historyOf(key);
+    const ps = published();
+    const views = sum(ps.map(p => (p.stats[key] || {}).views || 0));
+    const eng = sum(ps.map(p => {
+      const s = p.stats[key] || {};
+      return (s.likes || 0) + (s.comments || 0) + (s.saves || 0) + (s.shares || 0);
+    }));
+    const top = ps.slice().sort((a, b) => ((b.stats[key] || {}).views || 0) - ((a.stats[key] || {}).views || 0))[0];
+    return {
+      key, followers: sum(accs.map(a => +a.followers || 0)),
+      today: h.length ? h[h.length - 1].delta : 0,
+      week: sum(h.slice(-7).map(x => x.delta)), series: h.map(x => x.delta),
+      views, rate: views ? eng / views * 100 : 0,
+      topTitle: top ? top.title : '—', topViews: top ? (top.stats[key] || {}).views || 0 : 0,
+      count: accs.length
+    };
+  }
+  function dailyViews(days = 30) {
+    const out = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const d = addDays(today(), -i), k = dateKey(d);
+      let v = 0;
+      published().forEach(p => {
+        const age = Math.round((new Date(k) - new Date(p.date)) / 86400000);
+        if (age >= 0 && age < 8) v += postTotal(p) * [0.38, 0.24, 0.15, 0.09, 0.06, 0.04, 0.025, 0.015][age];
+      });
+      out.push({ date: k, value: Math.round(v) });
+    }
+    return out;
+  }
+
+  /* ============ SVG 图表 ============ */
+  let gid = 0;
+  function smoothPath(pts) {
+    if (pts.length < 2) return '';
+    let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const a = pts[i], b = pts[i + 1], cx = (a.x + b.x) / 2;
+      d += ` C${cx.toFixed(1)},${a.y.toFixed(1)} ${cx.toFixed(1)},${b.y.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`;
+    }
+    return d;
+  }
+  function stackedChart(dates, series, opts = {}) {
+    const W = 640, H = 248, PL = 38, PR = 10, PT = 18, PB = 26;
+    const pw = W - PL - PR, ph = H - PT - PB;
+    const totals = dates.map((_, i) => sum(series.map(s => s.values[i] || 0)));
+    const yMax = Math.max(Math.ceil(Math.max(...totals, 1) / 50) * 50, 50);
+    const step = pw / dates.length, bw = Math.max(3, Math.min(15, step * .62));
+    let g = '';
+    [0, .5, 1].forEach(f => {
+      const y = PT + ph * (1 - f);
+      g += `<line x1="${PL}" y1="${y}" x2="${W - PR}" y2="${y}" stroke="#edf0f6"/>`;
+      g += `<text x="${PL - 6}" y="${y + 4}" text-anchor="end" font-size="10" fill="#b2b2c3">${Math.round(yMax * f)}</text>`;
+    });
+    dates.forEach((d, i) => {
+      let acc = 0; const x = PL + step * i + (step - bw) / 2;
+      series.forEach(s => {
+        const v = s.values[i] || 0, h = ph * v / yMax, y = PT + ph - acc - h;
+        acc += h;
+        g += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0, h).toFixed(1)}" rx="1" fill="${s.color}"><title>${d} · ${s.name} +${fmt(v)}</title></rect>`;
+      });
+      if (i % 5 === 0 || i === dates.length - 1)
+        g += `<text x="${(PL + step * i + step / 2).toFixed(1)}" y="${H - 7}" text-anchor="middle" font-size="9.5" fill="#b2b2c3">${d.slice(5)}</text>`;
+    });
+    (opts.notes || []).forEach(n => {
+      const x = PL + step * n.index + step / 2;
+      g += `<line x1="${x.toFixed(1)}" y1="${PT}" x2="${x.toFixed(1)}" y2="${PT + ph}" stroke="#b9c6e8" stroke-dasharray="3 4"/>`;
+      g += `<text x="${(x + 4).toFixed(1)}" y="${PT + 11 + (n.row || 0) * 12}" font-size="9.5" fill="#5c78bd" font-weight="700">${esc(n.label)}</text>`;
+    });
+    return `<div class="chart-box"><svg viewBox="0 0 ${W} ${H}">${g}</svg></div>`;
+  }
+  function lineChart(dates, series, opts = {}) {
+    const W = 660, H = 258, PL = 46, PR = 12, PT = 18, PB = 28;
+    const pw = W - PL - PR, ph = H - PT - PB;
+    const all = series.reduce((a, s) => a.concat(s.values), []);
+    const yMax = Math.max(Math.ceil(Math.max(...all, 1) * 1.12), 10);
+    const xAt = i => PL + pw * (dates.length < 2 ? 0 : i / (dates.length - 1));
+    const yAt = v => PT + ph * (1 - v / yMax);
+    let g = '';
+    [0, .25, .5, .75, 1].forEach(f => {
+      const y = PT + ph * (1 - f);
+      g += `<line x1="${PL}" y1="${y}" x2="${W - PR}" y2="${y}" stroke="#eef0f6"/>`;
+      g += `<text x="${PL - 7}" y="${y + 4}" text-anchor="end" font-size="10" fill="#b2b2c3">${f === 1 ? fmt(yMax) : fmt(yMax * f)}</text>`;
+    });
+    series.forEach((s, si) => {
+      const pts = s.values.map((v, i) => ({ x: xAt(i), y: yAt(v) }));
+      const d = smoothPath(pts);
+      if (opts.area && si === 0) {
+        const id = 'area' + (++gid);
+        const ar = `M${pts[0].x.toFixed(1)},${(PT + ph).toFixed(1)} ` + pts.map(p => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ') + ` L${pts[pts.length - 1].x.toFixed(1)},${(PT + ph).toFixed(1)} Z`;
+        g += `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s.color}" stop-opacity=".26"/><stop offset="1" stop-color="${s.color}" stop-opacity="0"/></linearGradient></defs><path d="${ar}" fill="url(#${id})"/>`;
+      }
+      g += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.width || 2.2}" stroke-linecap="round" stroke-linejoin="round"/>`;
+      pts.forEach((p, i) => { g += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="${s.color}" opacity="0"><title>${dates[i]} · ${s.name} ${fmt(s.values[i])}</title></circle><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2.4" fill="#fff" stroke="${s.color}" stroke-width="1.6"/>`; });
+    });
+    dates.forEach((d, i) => { if (i % 5 === 0 || i === dates.length - 1) g += `<text x="${xAt(i).toFixed(1)}" y="${H - 7}" text-anchor="middle" font-size="9.5" fill="#b2b2c3">${d.slice(5)}</text>`; });
+    return `<div class="chart-box"><svg viewBox="0 0 ${W} ${H}">${g}</svg></div>`;
+  }
+  function barChart(labels, values, color = '#3b82f6') {
+    const W = 640, H = 210, PL = 30, PR = 10, PT = 14, PB = 26;
+    const pw = W - PL - PR, ph = H - PT - PB;
+    const yMax = Math.max(Math.ceil(Math.max(...values, 1) * 1.2), 3);
+    const step = pw / labels.length, bw = Math.min(26, step * .5);
+    let g = '';
+    [0, .5, 1].forEach(f => {
+      const y = PT + ph * (1 - f);
+      g += `<line x1="${PL}" y1="${y}" x2="${W - PR}" y2="${y}" stroke="#eef0f6"/><text x="${PL - 6}" y="${y + 4}" text-anchor="end" font-size="10" fill="#b2b2c3">${Math.round(yMax * f)}</text>`;
+    });
+    labels.forEach((l, i) => {
+      const h = ph * values[i] / yMax, x = PL + step * i + (step - bw) / 2, y = PT + ph - h;
+      g += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1, h).toFixed(1)}" rx="4" fill="${color}" opacity=".85"><title>${l} · ${values[i]}</title></rect>`;
+      g += `<text x="${(PL + step * i + step / 2).toFixed(1)}" y="${H - 7}" text-anchor="middle" font-size="9.5" fill="#b2b2c3">${l.slice(5)}</text>`;
+    });
+    return `<div class="chart-box"><svg viewBox="0 0 ${W} ${H}">${g}</svg></div>`;
+  }
+  function donutChart(items) {
+    const size = 170, c = size / 2, r = 66, sw = 20, total = sum(items.map(i => i.value)) || 1;
+    const C = 2 * Math.PI * r; let off = 0, g = '';
+    items.forEach(it => {
+      const len = it.value / total * C;
+      g += `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${it.color}" stroke-width="${sw}" stroke-dasharray="${Math.max(0, len - 2).toFixed(2)} ${(C - len + 2).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${c} ${c})"><title>${it.name} ${fmt(it.value)}</title></circle>`;
+      off += len;
+    });
+    g += `<text x="${c}" y="${c - 1}" text-anchor="middle" font-size="19" font-weight="800" fill="#1b1b2b">${fmt(total)}</text><text x="${c}" y="${c + 16}" text-anchor="middle" font-size="10" fill="#a0a0b4">总播放</text>`;
+    return `<svg viewBox="0 0 ${size} ${size}" style="width:158px;height:158px;flex:none">${g}</svg>`;
+  }
+  function sparkline(values, color) {
+    const id = 'sp' + (++gid), W = 120, H = 36, P = 2;
+    const max = Math.max(...values, 1) * 1.12;
+    const pts = values.map((v, i) => ({ x: P + (W - 2 * P) * (i / (values.length - 1 || 1)), y: H - P - (H - 2 * P) * v / max }));
+    const ar = `M${pts[0].x.toFixed(1)},${H} ` + pts.map(p => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ') + ` L${pts[pts.length - 1].x.toFixed(1)},${H} Z`;
+    return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:36px;display:block"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".22"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs><path d="${ar}" fill="url(#${id})"/><path d="${smoothPath(pts)}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+  }
+
+  /* ============ 分析文案 ============ */
+  function shortInsights() {
+    const hs = allHistory();
+    const per = KEYS.map(k => ({ key: k, v: sum(historyOf(k).slice(-7).map(h => h.delta)) })).sort((a, b) => b.v - a.v);
+    const top = per[0] || { key: 'bilibili', v: 0 }, total = sum(per.map(x => x.v)) || 1;
+    const last30 = hs.slice(-30);
+    const pubDates = new Set(published().map(p => p.date));
+    const pubArr = last30.filter(h => pubDates.has(h.date));
+    const nonArr = last30.filter(h => !pubDates.has(h.date));
+    const pubAvg = pubArr.length ? sum(pubArr.map(h => h.delta)) / pubArr.length : 0;
+    const nonAvg = nonArr.length ? sum(nonArr.map(h => h.delta)) / nonArr.length : 0;
+    const diff = Math.round((pubAvg / (nonAvg || 1) - 1) * 100);
+    const viewsByPlat = KEYS.map(k => ({ key: k, v: sum(recentPosts(30).map(p => (p.stats[k] || {}).views || 0)) })).sort((a, b) => b.v - a.v);
+    const vp = viewsByPlat[0], vtotal = sum(viewsByPlat.map(x => x.v)) || 1;
+    const rates = KEYS.map(k => platformAgg(k)).filter(a => a.views > 0).sort((a, b) => b.rate - a.rate);
+    const best = rates[0] || { key: 'bilibili', rate: 0 }, worst = rates[rates.length - 1] || { key: 'x', rate: 0 };
+    return [
+      { tag: '涨粉', cls: 'g', html: `近 7 天涨粉最多的是 <b>${PMAP[top.key].name} +${fmt(top.v)}</b>，占六平台合计 +${fmt(total)} 的 <b>${Math.round(top.v / total * 100)}%</b>。` },
+      { tag: '发布日', cls: 'g', html: `发布当天平均涨粉 <b>${fmt(pubAvg)}</b>，非发布日 <b>${fmt(nonAvg)}</b>，<b>${diff >= 0 ? '高' : '低'} ${Math.abs(diff)}%</b>。` },
+      { tag: '播放', cls: 'b', html: `近 30 天 <b>${Math.round(vp.v / vtotal * 100)}%</b> 的播放来自 <b>${PMAP[vp.key].name}</b>（${fmt(vp.v)} / ${fmt(vtotal)}）。` },
+      { tag: '互动', cls: 'o', html: `互动率最高的是 <b>${PMAP[best.key].name} ${best.rate.toFixed(1)}%</b>，最低 ${PMAP[worst.key].name} ${worst.rate.toFixed(1)}%，相差 <b>${(best.rate / (worst.rate || 1)).toFixed(1)} 倍</b>。` }
+    ];
+  }
+  function recommendations() {
+    const out = [];
+    const rates = KEYS.map(k => platformAgg(k)).filter(a => a.views > 0).sort((a, b) => b.rate - a.rate);
+    const best = rates[0], worst = rates[rates.length - 1];
+    if (best) out.push(`<b>加大 ${PMAP[best.key].name} 投入：</b>互动率 ${best.rate.toFixed(1)}% 为全平台最高，建议将每周 1–2 条重点内容优先首发该平台，并尝试把爆款结构复用到其他平台。`);
+    if (worst && best) out.push(`<b>优化 ${PMAP[worst.key].name} 内容形态：</b>互动率仅 ${worst.rate.toFixed(1)}%，建议缩短前 3 秒信息密度、补充字幕与封面文案，先做 2 周 A/B 测试再决定是否减投。`);
+    const ps = published().slice().sort((a, b) => postTotal(b) - postTotal(a));
+    if (ps[0]) {
+      const dow = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][new Date(ps[0].date + 'T00:00:00').getDay()];
+      out.push(`<b>固定 ${dow} 发布节奏：</b>最高播放内容《${esc(trunc(ps[0].title, 16))}》发布于 ${dow}，建议连续 4 周在同一时段发布同类选题，验证账号权重。`);
+      out.push(`<b>复用高表现选题：</b>「${esc(trunc(ps[0].title, 14))}」已验证需求，可拆成清单体、前后对比、答疑三条衍生内容，间隔 5–7 天分发。`);
+    }
+    const w = recentPosts(7), prev = published().filter(p => p.date >= dateKey(addDays(today(), -14)) && p.date < dateKey(addDays(today(), -7)));
+    const tw = sum(w.map(postTotal)), pv = sum(prev.map(postTotal));
+    if (pv) out.push(`<b>本周目标：</b>当前 7 天播放 ${fmt(tw)}，上周同期 ${fmt(pv)}，${tw >= pv ? '保持' : '需回升'}。建议下周发布量 ${Math.max(3, w.length + 1)} 条，重点提升单条播放中位数而非单纯加量。`);
+    else out.push(`<b>补齐历史基线：</b>上周暂无已发布内容，建议先连续发布 4 条建立基线，再评估渠道投入。`);
+    return out;
+  }
+
+  /* ============ 视图：大屏 ============ */
+  function viewDashboard() {
+    const hs = allHistory(), dates = hs.map(h => h.date);
+    const feat = published().slice().sort((a, b) => b.date.localeCompare(a.date))[0];
+    const featAgg = feat ? postEngagement(feat) : { views: 0, likes: 0, comments: 0, saves: 0, shares: 0, rate: 0 };
+    const week = recentPosts(7), prevWeek = published().filter(p => p.date >= dateKey(addDays(today(), -14)) && p.date < dateKey(addDays(today(), -7)));
+    const wViews = sum(week.map(postTotal)), pViews = sum(prevWeek.map(postTotal));
+    const wEng = sum(week.map(p => postEngagement(p).likes + postEngagement(p).comments + postEngagement(p).saves + postEngagement(p).shares));
+    const hot = week.slice().sort((a, b) => postTotal(b) - postTotal(a))[0];
+    const insightHtml = shortInsights().map(i => `<div class="insight"><span class="tag ${i.cls}">${i.tag}</span>${i.html}</div>`).join('');
+    const notes = [];
+    published().slice(0, 2).forEach((p, i) => { const idx = dates.indexOf(p.date); if (idx >= 0) notes.push({ index: idx, label: trunc(p.title, 6), row: i % 2 }); });
+    // 按平台分别取 30 天序列并对齐日期
+    const aligned = KEYS.filter(k => state.accounts.some(a => a.platform === k)).map(k => {
+      const m = Object.fromEntries(historyOf(k).map(h => [h.date, h.delta]));
+      return { name: PMAP[k].name, color: PMAP[k].color, values: dates.map(d => m[d] || 0) };
+    });
+    return `
+      <div class="view-head">
+        <div><h1>数据大屏</h1><p>全平台内容监控 · 覆盖 ${state.accounts.length} 个账号 · 最近 ${state.range} 天</p></div>
+        <div class="pill-row">
+          ${[7, 14, 30].map(r => `<button class="pill ${state.range === r ? 'on' : ''}" data-action="range" data-range="${r}">近 ${r} 天</button>`).join('')}
+          <button class="pill" data-action="open-post">+ 新增内容</button>
+        </div>
+      </div>
+      <section class="grid g-dash">
+        <div class="card">
+          <div class="card-head"><div class="card-title">最新发布</div><div class="card-sub">全平台同步状态</div></div>
+          ${feat ? `<div class="featured">
+            <div class="cover"><span class="cv-badge">第 ${published().length} 期</span><div class="cv-title">${esc(feat.cover)}</div><div class="cv-bar"></div><div class="cv-foot">口播稿从 2 小时到 20 分钟</div><div class="cv-live"><i class="dot green"></i>${KEYS.filter(k => (feat.stats[k] || {}).views > 0).length}/7 平台已发布</div></div>
+            <div>
+              <div class="date-pills"><span class="date-pill on">昨天 18:00</span><span class="date-pill">明天 18:00</span><span class="date-pill">${dateKey(today()).slice(5)} 18:00</span></div>
+              <div class="feat-title">${esc(feat.title)}</div>
+              <div class="feat-meta">${feat.date} ${feat.time} 发布 · 数据持续更新</div>
+              <div class="plat-nums">${KEYS.filter(k => state.accounts.some(a => a.platform === k)).map(k => `<div class="plat-num">${picon(k)}<span>${fmt((feat.stats[k] || {}).views || 0)}</span></div>`).join('')}</div>
+              <div class="metrics">
+                <div class="metric"><div class="m-label">全平台播放</div><div class="m-val">${fmt(featAgg.views)}</div></div>
+                <div class="metric"><div class="m-label">互动（赞评藏转）</div><div class="m-val">${fmt(featAgg.likes + featAgg.comments + featAgg.saves + featAgg.shares)}</div></div>
+                <div class="metric"><div class="m-label">互动率</div><div class="m-val sm">${featAgg.rate.toFixed(1)}%</div></div>
+              </div>
+              <div class="progress"><i style="width:${Math.min(100, Math.max(8, pViews ? wViews / pViews * 100 : 68))}%"></i></div>
+              <div class="card-sub" style="margin-top:6px">上周同期 ${fmt(pViews)} 播放 · 本周 ${fmt(wViews)}</div>
+            </div>
+          </div>` : '<div class="hint">暂无已发布内容，点击右上角新增。</div>'}
+        </div>
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">粉丝</div><div class="card-sub">多平台合计</div></div><div class="card-sub">不含未接入账号</div></div>
+          <div class="fans-num">${fmt(totalFans())}</div>
+          <div class="pill-row" style="margin-bottom:14px">
+            <span class="chip">今日 <strong class="up">+${fmt(gain(1))}</strong></span>
+            <span class="chip">近 7 天 <strong class="up">+${fmt(gain(7))}</strong></span>
+            <span class="chip">近 30 天 <strong class="up">+${fmt(gain(30))}</strong></span>
+          </div>
+          <div class="card-sub" style="margin-bottom:8px">每日净增 · 近 30 天</div>
+          ${stackedChart(dates, aligned, { notes })}
+          <div class="legend" style="margin-top:10px">${aligned.map(s => `<span><i style="background:${s.color}"></i>${s.name}</span>`).join('')}</div>
+          <div class="chart-note">全部平台均有记录 · 悬停查看每日明细</div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">数据分析</div><div class="card-sub">按规则自动算</div></div>
+          <div class="insight-list">${insightHtml}</div>
+          <div class="chart-note" style="margin-top:12px">每日更新 · 规则基于当前数据自动计算</div>
+        </div>
+      </section>
+      <section class="week-strip">
+        <div class="stat"><div class="ico" style="background:#eef3ff;color:#2f6bff">✎</div><div><div class="lbl">发布数量（7天）</div><div class="val">${week.length} <span style="font-size:12px;color:#9a9ab0">条</span></div><div class="sub">上周 ${prevWeek.length} 条</div></div></div>
+        <div class="stat"><div class="ico" style="background:#eaf8f1;color:#12a06a">▶</div><div><div class="lbl">全平台播放（7天）</div><div class="val">${fmt(wViews)}</div><div class="sub ${pViews ? (wViews >= pViews ? 'up' : 'down') : ''}">${pViews ? (wViews >= pViews ? '↑' : '↓') + Math.abs(Math.round((wViews / pViews - 1) * 100)) + '% vs 上周' : '暂无上周数据'}</div></div></div>
+        <div class="stat"><div class="ico" style="background:#fff1e6;color:#f59e0b">✦</div><div><div class="lbl">互动总量（7天）</div><div class="val">${fmt(wEng)}</div><div class="sub">互动率 ${wViews ? (wEng / wViews * 100).toFixed(1) : '0.0'}%</div></div></div>
+        <div class="stat"><div class="mini-cover">${esc(trunc(hot ? hot.cover : '暂无', 8))}</div><div style="min-width:0"><div class="lbl">最热素材（7天）</div><div class="val" style="font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(hot ? hot.title : '—')}</div><div class="sub">${fmt(hot ? postTotal(hot) : 0)} 播放</div></div></div>
+      </section>
+      <section class="plat-grid">
+        ${PLATFORMS.filter(p => state.accounts.some(a => a.platform === p.key)).map(p => {
+          const a = platformAgg(p.key);
+          return `<div class="pcard" data-action="filter-platform" data-key="${p.key}" style="cursor:pointer">
+            <div class="pc-head">${picon(p.key)}<span class="pname">${p.name}</span><span class="card-sub" style="margin-left:auto">${a.count ? '粉丝' : ''}</span></div>
+            <div class="pc-follow">${fmt(a.followers)}</div>
+            <div class="pc-chips"><span class="pc-chip">今日 <b class="up">+${fmt(a.today)}</b></span><span class="pc-chip">7天 <b class="up">+${fmt(a.week)}</b></span></div>
+            ${sparkline(a.series.slice(-30), p.color)}
+            <div class="pc-foot"><div>近7日播放<b>${fmt(sum(recentPosts(7).map(x => (x.stats[p.key] || {}).views || 0)))}</b></div><div>互动率<b>${a.rate.toFixed(1)}%</b></div></div>
+          </div>`;
+        }).join('')}
+      </section>
+      <section class="card mt14">
+        <div class="card-head"><div class="card-title">近期内容明细</div><div class="card-sub">按发布时间倒序 · 点击平台卡片可筛选</div></div>
+        ${postTable(state.filterKey ? published().filter(p => (p.stats[state.filterKey] || {}).views > 0) : published().slice(0, 8))}
+      </section>`;
+  }
+
+  /* ============ 视图：流量 ============ */
+  function viewTraffic() {
+    const days = 14;
+    const labels = [], counts = [];
+    for (let i = days - 1; i >= 0; i--) { const k = dateKey(addDays(today(), -i)); labels.push(k); counts.push(published().filter(p => p.date === k).length); }
+    const dv = dailyViews(30), dates = dv.map(x => x.date);
+    const series = KEYS.filter(k => state.accounts.some(a => a.platform === k)).map(k => {
+      const vals = dates.map(d => {
+        let v = 0;
+        published().forEach(p => {
+          const age = Math.round((new Date(d) - new Date(p.date)) / 86400000);
+          if (age >= 0 && age < 8) v += ((p.stats[k] || {}).views || 0) * [0.38, 0.24, 0.15, 0.09, 0.06, 0.04, 0.025, 0.015][age];
+        });
+        return Math.round(v);
+      });
+      return { name: PMAP[k].name, color: PMAP[k].color, values: vals };
+    });
+    const wk = recentPosts(7);
+    const donutItems = KEYS.filter(k => state.accounts.some(a => a.platform === k)).map(k => ({ name: PMAP[k].name, color: PMAP[k].color, value: sum(wk.map(p => (p.stats[k] || {}).views || 0)) })).filter(x => x.value > 0);
+    return `
+      <div class="view-head"><div><h1>流量</h1><p>发布节奏、播放走势与平台流量结构</p></div>
+        <div class="pill-row">${[7, 14, 30].map(r => `<button class="pill ${state.range === r ? 'on' : ''}" data-action="range" data-range="${r}">近 ${r} 天</button>`).join('')}</div>
+      </div>
+      <section class="grid g-traffic">
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">播放走势（按平台）</div><div class="card-sub">按发布后 8 天衰减模型估算每日播放</div></div><div class="legend">${series.map(s => `<span><i style="background:${s.color}"></i>${s.name}</span>`).join('')}</div></div>
+          ${lineChart(dates, series, { area: true })}
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">平台流量结构（7天）</div><div class="card-sub">${fmt(sum(donutItems.map(x => x.value)))} 次播放</div></div>
+          <div class="donut-wrap">${donutChart(donutItems)}<div class="donut-list">${donutItems.sort((a, b) => b.value - a.value).map(x => `<div class="donut-item"><i style="background:${x.color}"></i><span class="nm">${x.name}</span><b>${Math.round(x.value / (sum(donutItems.map(y => y.value)) || 1) * 100)}%</b></div>`).join('')}</div></div>
+          <div class="chart-note" style="margin-top:14px">占比最高的平台决定整体播放基本盘，互动率另见「分析」页。</div>
+        </div>
+      </section>
+      <section class="card mt14">
+        <div class="card-head"><div class="card-title">发布节奏（近 14 天）</div><div class="card-sub">共 ${sum(counts)} 条已发布内容</div></div>
+        ${barChart(labels, counts, '#6c8cff')}
+      </section>
+      <section class="card mt14">
+        <div class="card-head"><div class="card-title">平台数据明细</div><div class="card-sub">近 7 天已发布内容汇总</div></div>
+        ${platformTable(wk)}
+      </section>`;
+  }
+
+  /* ============ 视图：日历 ============ */
+  function viewCalendar() {
+    const y = state.month.y, m = state.month.m;
+    const first = new Date(y, m, 1), start = new Date(first); start.setDate(1 - first.getDay());
+    const cells = [];
+    for (let i = 0; i < 42; i++) cells.push(addDays(start, i));
+    const last = new Date(y, m + 1, 0);
+    const future = state.posts.filter(p => p.status !== '已发布').length;
+    return `
+      <div class="view-head"><div><h1>日历</h1><p>近两周发布安排 · 接下来还有 ${future} 期要发</p></div>
+        <div class="cal-head"><button data-action="month-prev">‹</button><div class="cal-title">${y} 年 ${m + 1} 月</div><button data-action="month-next">›</button><button class="btn btn-primary" data-action="open-post">+ 新增内容</button></div>
+      </div>
+      <div class="card">
+        <div class="cal-grid">${['周一', '周二', '周三', '周四', '周五', '周六', '周日'].map(d => `<div class="cal-dow">${d}</div>`).join('')}</div>
+        <div class="cal-grid" style="margin-top:6px">
+          ${cells.map(d => {
+            const k = dateKey(d), out = d.getMonth() !== m || d.getFullYear() !== y;
+            const ps = state.posts.filter(p => p.date === k);
+            const isToday = k === dateKey(today());
+            return `<div class="cal-cell ${out ? 'out' : ''} ${isToday ? 'today' : ''}" data-action="day" data-date="${k}">
+              <div class="cal-day">${d.getDate()}${isToday ? ' · 今天' : ''}</div>
+              ${ps.slice(0, 2).map(p => `<div class="cal-post"><div class="nm">${esc(trunc(p.title, 12))}</div><div class="mt"><i class="dot ${p.status === '已发布' ? 'green' : p.status === '计划中' ? 'blue' : 'orange'}"></i> ${p.time} · ${p.status === '已发布' ? '已发布 · ' + fmt(postTotal(p)) : p.status}</div></div>`).join('')}
+              ${ps.length > 2 ? `<div class="cal-more">+${ps.length - 2} 更多</div>` : ''}
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="pill-row" style="margin-top:14px">
+        <span class="chip"><i class="dot green"></i>已发布</span><span class="chip"><i class="dot blue"></i>已定时</span><span class="chip"><i class="dot orange"></i>等待点布</span><span class="chip"><i class="dot gray"></i>计划中</span><span class="chip"><i class="dot red"></i>异常</span>
+      </div>`;
+  }
+
+  /* ============ 视图：分析 ============ */
+  function viewInsights() {
+    const ins = shortInsights();
+    const ps = published().slice().sort((a, b) => b.date.localeCompare(a.date)).slice(0, 6);
+    const dv = dailyViews(30);
+    return `
+      <div class="view-head"><div><h1>分析</h1><p>基于现有数据的归因、复盘与未来行动建议</p></div>
+        <div class="pill-row"><button class="btn btn-primary" data-action="open-post">+ 新增内容</button></div>
+      </div>
+      <section class="grid g-insights">
+        <div class="card">
+          <div class="card-head"><div class="card-title">数据归因</div><div class="card-sub">规则自动计算</div></div>
+          <div class="insight-list">${ins.map(i => `<div class="insight"><span class="tag ${i.cls}">${i.tag}</span>${i.html}</div>`).join('')}</div>
+          <div class="sec-label" style="margin-top:18px">未来建议</div>
+          ${recommendations().map((r, i) => `<div class="rec"><div class="rn">${i + 1}</div><div class="rt">${r}</div></div>`).join('')}
+        </div>
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">播放走势</div><div class="card-sub">全平台每日播放估算 · 近 30 天</div></div></div>
+          ${lineChart(dv.map(x => x.date), [{ name: '全平台播放', color: '#3b6bff', values: dv.map(x => x.value) }], { area: true })}
+          <div class="sec-label" style="margin-top:18px">内容复盘 · 最近 6 条</div>
+          <div class="tbl-wrap"><table><thead><tr><th>内容</th><th>发布时间</th><th>全平台播放</th><th>互动率</th><th>相对上一条</th></tr></thead><tbody>
+            ${ps.map((p, i) => {
+              const t = postTotal(p), r = postEngagement(p).rate;
+              const prevT = ps[i + 1] ? postTotal(ps[i + 1]) : 0;
+              const d = prevT ? Math.round((t / prevT - 1) * 100) : 0;
+              return `<tr><td>${esc(trunc(p.title, 14))}</td><td>${p.date}</td><td><b>${fmt(t)}</b></td><td>${r.toFixed(1)}%</td><td class="${d >= 0 ? 'up' : 'down'}">${prevT ? (d >= 0 ? '+' : '') + d + '%' : '—'}</td></tr>`;
+            }).join('')}
+          </tbody></table></div>
+          <div class="chart-note" style="margin-top:12px">同一选题在不同平台的互动率差异，建议以互动率而非绝对播放量作为投放依据。</div>
+        </div>
+      </section>`;
+  }
+
+  /* ============ 视图：账号 ============ */
+  function viewAccounts() {
+    return `
+      <div class="view-head"><div><h1>账号管理</h1><p>导入各平台账号后可自动汇总统计 · 数据仅存于本机浏览器</p></div>
+        <div class="pill-row"><button class="btn btn-ghost" data-action="export">导出数据</button><button class="btn btn-ghost" data-action="import">导入数据</button><button class="btn btn-danger" data-action="reset">重置示例</button></div>
+      </div>
+      <section class="grid g-traffic">
+        <div class="card">
+          <div class="card-head"><div class="card-title">已接入账号（${state.accounts.length}）</div><div class="card-sub">粉丝总数 ${fmt(totalFans())}</div></div>
+          <div class="acc-list">${state.accounts.map(a => `
+            <div class="acc-row">${picon(a.platform)}<div style="flex:1;min-width:0"><div class="acc-name">${esc(a.name)}</div><div class="acc-handle">${esc(a.handle)} · ${PMAP[a.platform].name}</div></div>
+              <div style="text-align:right"><div class="acc-fans">${fmt(a.followers)}</div><div class="acc-handle">今日 +${fmt((a.history || []).slice(-1)[0] ? (a.history || []).slice(-1)[0].delta : 0)}</div></div>
+              <button class="btn btn-danger" data-action="del-account" data-id="${a.id}">移除</button>
+            </div>`).join('') || '<div class="hint">还没有账号，请在右侧导入。</div>'}</div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">添加单个账号</div></div>
+            <div class="form-row">
+              <div class="field"><label>平台</label><select id="accPlatform">${PLATFORMS.map(p => `<option value="${p.key}">${p.name}</option>`).join('')}</select></div>
+              <div class="field"><label>账号名称</label><input id="accName" placeholder="例如：B站 · 主账号"></div>
+            </div>
+            <div class="form-row">
+              <div class="field"><label>账号标识</label><input id="accHandle" placeholder="@your_account"></div>
+              <div class="field" style="max-width:150px"><label>当前粉丝数</label><input id="accFans" type="number" min="0" value="0"></div>
+            </div>
+            <button class="btn btn-primary" data-action="add-account">添加账号</button>
+          </div>
+          <div class="card mt14">
+            <div class="card-head"><div class="card-title">批量导入</div><div class="card-sub">每行一个账号</div></div>
+            <div class="field"><label>格式：平台, 账号名称, 粉丝数</label><textarea id="bulkText" placeholder="B站, 我的小号, 12000&#10;小红书, 品牌号, 8600"></textarea></div>
+            <div class="hint" style="margin:10px 0">平台可用：${PLATFORMS.map(p => p.name).join(' / ')}。粉丝数可省略，默认 0。导入后系统按粉丝量生成近 30 天增长基线。</div>
+            <button class="btn btn-primary" data-action="bulk-import">批量导入</button>
+          </div>
+        </div>
+      </section>
+      <div class="card mt14"><div class="hint">说明：当前为本地演示工具，平台数据为模拟数据。若要接入真实账号，需要各平台开放接口与授权凭证；导出/导入功能可用于在多台设备间迁移这份数据。</div></div>`;
+  }
+
+  /* ============ 表格 ============ */
+  function postTable(posts) {
+    if (!posts.length) return '<div class="hint">暂无数据</div>';
+    return `<div class="tbl-wrap"><table><thead><tr><th>内容</th><th>平台</th><th>发布时间</th><th>播放</th><th>赞</th><th>评论</th><th>收藏</th><th>转发</th><th>互动率</th></tr></thead><tbody>
+      ${posts.slice().sort((a, b) => b.date.localeCompare(a.date)).map(p => {
+        const e = postEngagement(p), n = KEYS.filter(k => (p.stats[k] || {}).views > 0).length;
+        return `<tr><td>${esc(trunc(p.title, 18))}</td><td>${n} 个平台</td><td>${p.date} ${p.time}</td><td><b>${fmt(e.views)}</b></td><td>${fmt(e.likes)}</td><td>${fmt(e.comments)}</td><td>${fmt(e.saves)}</td><td>${fmt(e.shares)}</td><td class="up">${e.rate.toFixed(1)}%</td></tr>`;
+      }).join('')}
+    </tbody></table></div>`;
+  }
+  function platformTable(posts) {
+    return `<div class="tbl-wrap"><table><thead><tr><th>平台</th><th>状态</th><th>播放</th><th>赞</th><th>评论</th><th>收藏</th><th>转发</th><th>互动率</th></tr></thead><tbody>
+      ${KEYS.filter(k => state.accounts.some(a => a.platform === k)).map(k => {
+        const views = sum(posts.map(p => (p.stats[k] || {}).views || 0));
+        const likes = sum(posts.map(p => (p.stats[k] || {}).likes || 0));
+        const cmts = sum(posts.map(p => (p.stats[k] || {}).comments || 0));
+        const saves = sum(posts.map(p => (p.stats[k] || {}).saves || 0));
+        const shares = sum(posts.map(p => (p.stats[k] || {}).shares || 0));
+        return `<tr><td>${picon(k)} ${PMAP[k].name}</td><td><span class="status-badge"><i class="dot green"></i>已接入</span></td><td><b>${fmt(views)}</b></td><td>${fmt(likes)}</td><td>${fmt(cmts)}</td><td>${fmt(saves)}</td><td>${fmt(shares)}</td><td class="up">${(views ? (likes + cmts + saves + shares) / views * 100 : 0).toFixed(1)}%</td></tr>`;
+      }).join('')}
+    </tbody></table></div>`;
+  }
+
+  /* ============ 渲染 & 弹窗 ============ */
+  const VIEWS = { dashboard: viewDashboard, traffic: viewTraffic, calendar: viewCalendar, insights: viewInsights, accounts: viewAccounts };
+  function render() {
+    if (state.activeView === 'publish' && window.PublishCenter) {
+      $('#navTabs button').forEach(b => b.classList.toggle('active', b.dataset.view === 'publish'));
+      const d = new Date(), wd = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()];
+      $('#clock').textContent = `${d.getMonth() + 1}/${d.getDate()} ${wd} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+      window.PublishCenter.render();
+      return;
+    }
+    if (window.PublishCenter) window.PublishCenter.stopPolling();
+    $('#mainContent').innerHTML = VIEWS[state.activeView]();
+    $('#navTabs button').forEach(b => b.classList.toggle('active', b.dataset.view === state.activeView));
+    const d = new Date(), wd = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()];
+    $('#clock').textContent = `${d.getMonth() + 1}/${d.getDate()} ${wd} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  }
+  function toast(msg) {
+    const el = document.createElement('div'); el.className = 'toast'; el.textContent = msg; document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2300);
+  }
+  function showModal(html) { $('#modalRoot').innerHTML = `<div class="mask" data-action="close-mask"><div class="modal" data-stop>${html}</div></div>`; }
+  function closeModal() { $('#modalRoot').innerHTML = ''; }
+  function postModal(date) {
+    showModal(`<h3>新增内容</h3><div class="mp">发布后可在日历与大屏中查看统计</div>
+      <div class="field" style="margin-bottom:12px"><label>内容标题</label><input id="npTitle" placeholder="例如：10 个 Bot 组成的编辑部"></div>
+      <div class="form-row"><div class="field"><label>发布日期</label><input id="npDate" type="date" value="${date || dateKey(today())}"></div>
+      <div class="field" style="max-width:120px"><label>时间</label><input id="npTime" type="time" value="18:00"></div>
+      <div class="field"><label>状态</label><select id="npStatus"><option>计划中</option><option>等待点布</option><option>已发布</option></select></div></div>
+      <div class="field"><label>总播放（已发布时填写，将按平台权重分配）</label><input id="npViews" type="number" min="0" value="0"></div>
+      <div class="modal-foot"><button class="btn btn-ghost" data-action="close-modal">取消</button><button class="btn btn-primary" data-action="save-post">保存内容</button></div>`);
+  }
+  function dayModal(date) {
+    const ps = state.posts.filter(p => p.date === date);
+    showModal(`<h3>${date}</h3><div class="mp">${ps.length ? ps.length + ' 条内容' : '当天暂无内容'}</div>
+      ${ps.map(p => `<div class="acc-row"><div style="flex:1"><div class="acc-name">${esc(p.title)}</div><div class="acc-handle">${p.time} · ${p.status} · ${fmt(postTotal(p))} 播放</div></div><button class="btn btn-danger" data-action="del-post" data-id="${p.id}">删除</button></div>`).join('')}
+      <div class="modal-foot"><button class="btn btn-ghost" data-action="close-modal">关闭</button><button class="btn btn-primary" data-action="open-post" data-date="${date}">+ 新增内容</button></div>`);
+  }
+
+  /* ============ 事件 ============ */
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-action]');
+    if (!t) { if (e.target.classList.contains('mask')) closeModal(); return; }
+    const a = t.dataset.action;
+    if (a === 'close-mask' && e.target.closest('[data-stop]')) return;
+    if (a === 'close-modal' || a === 'close-mask') { closeModal(); return; }
+    if (a === 'range') { state.range = +t.dataset.range; saveState(); render(); return; }
+    if (a === 'filter-platform') { state.filterKey = state.filterKey === t.dataset.key ? null : t.dataset.key; render(); return; }
+    if (a === 'month-prev') { state.month = { y: state.month.m === 0 ? state.month.y - 1 : state.month.y, m: (state.month.m + 11) % 12 }; render(); return; }
+    if (a === 'month-next') { state.month = { y: state.month.m === 11 ? state.month.y + 1 : state.month.y, m: (state.month.m + 1) % 12 }; render(); return; }
+    if (a === 'open-post') { postModal(t.dataset.date); return; }
+    if (a === 'day') { dayModal(t.dataset.date); return; }
+    if (a === 'save-post') {
+      const title = $('#npTitle').value.trim();
+      if (!title) { toast('请输入内容标题'); return; }
+      const date = $('#npDate').value || dateKey(today());
+      const status = $('#npStatus').value;
+      const total = Math.max(0, +$('#npViews').value || 0);
+      state.posts.push({ id: 'post_' + Math.random().toString(36).slice(2, 9), title, cover: title, date, time: $('#npTime').value || '18:00', status, stats: status === '已发布' ? makeStats(total) : makeStats(0) });
+      saveState(); closeModal(); render(); toast('内容已保存'); return;
+    }
+    if (a === 'del-post') { state.posts = state.posts.filter(p => p.id !== t.dataset.id); saveState(); closeModal(); render(); toast('已删除'); return; }
+    if (a === 'add-account') {
+      const platform = $('#accPlatform').value, name = $('#accName').value.trim() || PMAP[platform].name + ' · 账号';
+      const handle = $('#accHandle').value.trim() || '@' + platform;
+      const followers = Math.max(0, +$('#accFans').value || 0);
+      state.accounts.push({ id: 'acc_' + Math.random().toString(36).slice(2, 9), platform, name, handle, followers, history: genHistory(followers) });
+      saveState(); render(); toast('账号已添加'); return;
+    }
+    if (a === 'del-account') { state.accounts = state.accounts.filter(x => x.id !== t.dataset.id); saveState(); render(); toast('账号已移除'); return; }
+    if (a === 'bulk-import') {
+      const lines = $('#bulkText').value.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+      let n = 0;
+      lines.forEach(line => {
+        const parts = line.split(/[,，\t]/).map(x => x.trim());
+        const p = PLATFORMS.find(x => x.name === parts[0] || x.key === parts[0] || x.name.toLowerCase() === (parts[0] || '').toLowerCase() || parts[0].toLowerCase().includes(x.key));
+        if (!p) return;
+        const name = parts[1] || p.name + ' · 账号';
+        const followers = Math.max(0, parseInt((parts[2] || '0').replace(/[^\d]/g, ''), 10) || 0);
+        state.accounts.push({ id: 'acc_' + Math.random().toString(36).slice(2, 9), platform: p.key, name, handle: '@' + p.key + n, followers, history: genHistory(followers) });
+        n++;
+      });
+      saveState(); render(); toast(`成功导入 ${n} 个账号`); return;
+    }
+    if (a === 'export') {
+      const blob = new Blob([JSON.stringify({ accounts: state.accounts, posts: state.posts }, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob), link = document.createElement('a');
+      link.href = url; link.download = '脉络社媒数据.json'; link.click(); URL.revokeObjectURL(url); toast('已导出'); return;
+    }
+    if (a === 'import') { $('#fileInput').click(); return; }
+    if (a === 'reset') {
+      if (confirm('确定重置为示例数据？当前数据将被覆盖。')) { state = seedState(); saveState(); render(); toast('已重置'); }
+      return;
+    }
+  });
+  $('#navTabs button').forEach(b => b.addEventListener('click', () => {
+    state.activeView = b.dataset.view; saveState(); render(); window.scrollTo({ top: 0, behavior: 'smooth' });
+  }));
+  $('#refreshBtn').addEventListener('click', () => { render(); toast('数据已刷新'); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  const fi = document.createElement('input'); fi.type = 'file'; fi.id = 'fileInput'; fi.accept = '.json'; fi.style.display = 'none';
+  document.body.appendChild(fi);
+  fi.addEventListener('change', () => {
+    const f = fi.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const d = JSON.parse(r.result);
+        if (!d.accounts || !d.posts) throw new Error('格式不符');
+        state.accounts = d.accounts; state.posts = d.posts; saveState(); render(); toast('导入成功');
+      } catch (err) { toast('导入失败：文件格式不正确'); }
+      fi.value = '';
+    };
+    r.readAsText(f);
+  });
+
+  /* ============ 启动 ============ */
+  // 若处于发布中心视图，先等服务连接检测完成再渲染，避免误显示"离线"
+  if (window.PublishCenter) {
+    window.PublishCenter.init().catch(() => {}).finally(() => render());
+    // 兜底：3 秒后无论如何重绘一次，防止 fetch 卡住
+    setTimeout(() => render(), 3000);
+  } else {
+    render();
+  }
+})();
+
+</script>
+</body>
+</html>
