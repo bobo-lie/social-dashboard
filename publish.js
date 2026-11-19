@@ -141,7 +141,7 @@
       ? `双击项目目录里的 <b>启动发布中心.bat</b>，<br>看到「发布中心已启动」后刷新本页即可。<br><br>发布服务负责驱动你本机的 Chrome 和推送微信通知，<br>数据全部在你本机，不上传任何服务器。`
       : `当前是部署在云端的只读数据看板。<br>自动发布要驱动<b>你自己电脑上的 Chrome 和登录态</b>，<br>这一步只能在本地完成，无法放在云服务器上。<br><br>在本机运行项目里的 <b>启动发布中心.bat</b>，<br>即可解锁完整的自动发布 + 微信通知功能。数据依然全在本机。`;
     return `<div class="view-head"><div><h1>发布中心</h1><p>${local ? '自动发布需要本地服务运行中' : '线上只读版 · 发布功能请在本机使用'}</p></div></div>
-      <div class="card" style="max-width:640px;margin:40px auto;text-align:center;padding:48px">
+      <div class="card" style="max-width:640px;margin:0 auto;text-align:center;padding:48px">
         <div style="font-size:44px;margin-bottom:14px">${local ? '🔌' : '☁️'}</div>
         <div class="card-title" style="font-size:19px;margin-bottom:10px">${h1}</div>
         <p class="card-sub" style="line-height:1.8;margin-bottom:20px">${body}</p>
