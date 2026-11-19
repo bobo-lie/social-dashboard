@@ -6,35 +6,40 @@
 <title>脉络 · 社媒数据台</title>
 <style>
 :root{
-  --bg1:#f6f5fc; --bg2:#fcf7f6; --bg3:#f3f7fd;
-  --card:#ffffff; --text:#1b1b2b; --muted:#9696ad; --line:#eeeff5;
-  --blue:#2f6bff; --green:#12a06a; --red:#e5484d; --orange:#f59e0b;
-  --purple:#7c5cff; --soft:#f5f6fb;
-  --shadow:0 6px 26px rgba(40,45,90,.055);
-  --shadow-lg:0 12px 40px rgba(40,45,90,.10);
+  /* Apple-inspired palette: near-white canvas, near-black ink, precise grays */
+  --bg1:#f5f5f7; --bg2:#fbfbfd; --bg3:#f5f5f7;
+  --card:#ffffff; --text:#1d1d1f; --muted:#86868b; --line:#e8e8ed;
+  --blue:#0071e3; --green:#1d9d74; --red:#e5484d; --orange:#f08c00;
+  --purple:#7c5cff; --soft:#f5f5f7;
+  --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
+  --shadow-lg:0 12px 44px rgba(0,0,0,.12);
+  --ease:cubic-bezier(.28,.11,.32,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-  background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 48%,var(--bg3) 100%);
-  min-height:100vh;color:var(--text);-webkit-font-smoothing:antialiased;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 100%);
+  min-height:100vh;color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  letter-spacing:-.01em;
 }
-.app{max-width:1560px;margin:0 auto;padding:16px 22px 24px}
+.app{max-width:1560px;margin:0 auto;padding:20px 26px 28px}
+/* 全站统一：主内容区顶层区块之间保持一致的呼吸间距 */
+#mainContent{display:flex;flex-direction:column;gap:clamp(16px,1.3vw,20px)}
 .topbar{
-  display:flex;align-items:center;gap:24px;height:62px;padding:0 18px;
-  background:rgba(255,255,255,.78);backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.95);border-radius:18px;
-  box-shadow:var(--shadow);position:sticky;top:12px;z-index:50;margin-bottom:18px;
+  display:flex;align-items:center;gap:24px;height:60px;padding:0 20px;
+  background:rgba(255,255,255,.72);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);
+  border:1px solid rgba(255,255,255,.7);border-radius:16px;
+  box-shadow:0 1px 2px rgba(0,0,0,.03),0 6px 20px rgba(0,0,0,.04);position:sticky;top:12px;z-index:50;margin-bottom:8px;
 }
 .brand{display:flex;align-items:center;gap:10px;min-width:150px}
-.brand-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#3b6bff,#8b5cf6);color:#fff;display:grid;place-items:center;font-weight:800;font-size:17px;box-shadow:0 4px 12px rgba(80,80,220,.28)}
-.brand-text strong{display:block;font-size:16px;line-height:1.15;letter-spacing:.5px}
-.brand-text span{font-size:11px;color:var(--muted)}
-.tabs{display:flex;gap:3px;background:#f1f2f8;padding:4px;border-radius:12px}
-.tabs button{border:0;background:transparent;padding:7px 18px;border-radius:9px;font-size:13px;color:#72728c;cursor:pointer;font-weight:600;transition:.18s}
+.brand-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#2e2e36,#4a4a55);color:#fff;display:grid;place-items:center;font-weight:600;font-size:16px;letter-spacing:-.5px;box-shadow:0 2px 8px rgba(0,0,0,.14)}
+.brand-text strong{display:block;font-size:15px;line-height:1.15;letter-spacing:-.02em;font-weight:600}
+.brand-text span{font-size:10.5px;color:var(--muted);letter-spacing:0}
+.tabs{display:flex;gap:2px;background:rgba(0,0,0,.045);padding:3px;border-radius:10px}
+.tabs button{border:0;background:transparent;padding:7px 17px;border-radius:8px;font-size:12.5px;color:#6e6e73;cursor:pointer;font-weight:500;transition:all .3s var(--ease)}
 .tabs button:hover{color:var(--text)}
-.tabs button.active{background:#fff;color:var(--text);box-shadow:0 2px 8px rgba(30,35,70,.08)}
+.tabs button.active{background:#fff;color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 1px rgba(0,0,0,.04)}
 .top-right{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:12px;color:#7b7b92}
 .status{display:flex;align-items:center;gap:6px;white-space:nowrap}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex:none}
@@ -49,83 +54,88 @@ body{
 .foot{text-align:center;color:#aaaabc;font-size:11px;padding:8px 0 0}
 
 /* ---------- 通用 ---------- */
-.view-head{display:flex;align-items:flex-end;justify-content:space-between;margin:2px 2px 16px;gap:16px}
-.view-head h1{font-size:24px;letter-spacing:-.5px;font-weight:800}
-.view-head p{color:var(--muted);font-size:12.5px;margin-top:5px}
+.view-head{display:flex;align-items:flex-end;justify-content:space-between;margin:2px 2px 0;gap:16px}
+.view-head > div:first-child{flex:0 1 auto;min-width:0}
+.view-head h1{font-size:30px;letter-spacing:-.035em;font-weight:600;line-height:1.1}
+.view-head p{color:var(--muted);font-size:13px;margin-top:6px;letter-spacing:-.01em}
 .pill-row{display:flex;gap:6px;flex-wrap:wrap}
-.pill{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:12px;color:#7a7a92;cursor:pointer;transition:.18s;font-weight:600;white-space:nowrap}
-.pill:hover{border-color:#cfd9ff;color:var(--blue)}
-.pill.on{background:#1e1e2d;color:#fff;border-color:#1e1e2d}
-.card{background:var(--card);border-radius:20px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.9);padding:20px 22px}
-.card-title{font-size:15px;font-weight:800;letter-spacing:-.2px}
-.card-sub{font-size:11.5px;color:var(--muted)}
-.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:14px}
+.pill{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 15px;font-size:12px;color:#515154;cursor:pointer;transition:all .3s var(--ease);font-weight:500;white-space:nowrap}
+.pill:hover{border-color:#c7c7cc;color:var(--text);transform:translateY(-1px)}
+.pill.on{background:#1d1d1f;color:#fff;border-color:#1d1d1f;font-weight:500}
+.card{background:var(--card);border-radius:18px;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.04);padding:22px 24px}
+.card-title{font-size:17px;font-weight:600;letter-spacing:-.02em}
+.card-sub{font-size:12px;color:var(--muted);letter-spacing:-.005em}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:16px}
 .grid{display:grid;gap:14px}
 .g-dash{grid-template-columns:1.28fr 1.12fr .92fr}
 .g-traffic{grid-template-columns:1.55fr 1fr}
 .g-insights{grid-template-columns:1fr 1fr}
-.mt14{margin-top:14px}
-.big-num{font-size:42px;font-weight:800;letter-spacing:-2px;line-height:1.05;font-variant-numeric:tabular-nums}
+.mt14{margin-top:0}
+.big-num{font-size:44px;font-weight:600;letter-spacing:-.04em;line-height:1.05;font-variant-numeric:tabular-nums}
 .num{font-variant-numeric:tabular-nums}
-.up{color:var(--green);font-weight:700}
-.down{color:var(--red);font-weight:700}
-.chip{display:inline-flex;align-items:center;gap:5px;background:var(--soft);border-radius:999px;padding:5px 11px;font-size:11.5px;color:#6b6b84;font-weight:600}
-.chip strong{color:var(--text)}
-.sec-label{font-size:12px;font-weight:800;color:#5d5d78;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.up{color:var(--green);font-weight:600}
+.down{color:var(--red);font-weight:600}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--soft);border-radius:999px;padding:6px 12px;font-size:11.5px;color:#515154;font-weight:500}
+.chip strong{color:var(--text);font-weight:600}
+.sec-label{font-size:12px;font-weight:600;color:#515154;margin-bottom:10px;display:flex;align-items:center;gap:7px}
 .sec-label::before{content:"";width:3px;height:12px;border-radius:3px;background:var(--blue)}
 
 /* ---------- 大屏 ---------- */
 .featured{display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:start}
 .cover{position:relative;width:190px;height:214px;border-radius:15px;background:linear-gradient(150deg,#fbf8ef,#f3eee0);box-shadow:0 8px 22px rgba(70,60,40,.10);overflow:hidden;padding:22px 16px;display:flex;flex-direction:column;justify-content:center}
 .cover .cv-badge{position:absolute;left:12px;top:12px;background:var(--blue);color:#fff;font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:999px}
-.cover .cv-title{font-size:23px;font-weight:800;line-height:1.32;letter-spacing:-.5px}
+.cover .cv-title{font-size:24px;font-weight:600;line-height:1.25;letter-spacing:-.03em}
 .cover .cv-bar{width:52px;height:4px;background:linear-gradient(90deg,#7c5cff,#b6a5ff);border-radius:4px;margin:14px 0}
 .cover .cv-foot{position:absolute;bottom:14px;left:14px;right:14px;font-size:9.5px;color:#a09a8c;line-height:1.4}
 .cover .cv-live{position:absolute;right:10px;bottom:34px;background:rgba(255,255,255,.92);border-radius:999px;padding:5px 9px;font-size:10px;color:#3c8c62;font-weight:700;display:flex;align-items:center;gap:5px;box-shadow:0 3px 10px rgba(0,0,0,.07)}
 .date-pills{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 .date-pill{font-size:11px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:#77778e;font-weight:600}
 .date-pill.on{background:#1e1e2d;color:#fff;border-color:#1e1e2d}
-.feat-title{font-size:20px;font-weight:800;letter-spacing:-.5px;line-height:1.3}
+.feat-title{font-size:21px;font-weight:600;letter-spacing:-.025em;line-height:1.3}
 .feat-meta{font-size:11.5px;color:var(--muted);margin:7px 0 14px}
 .plat-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:16px}
-.plat-num{display:flex;align-items:center;gap:7px;background:#f6f7fb;border-radius:9px;padding:7px 9px;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.plat-num{display:flex;align-items:center;gap:7px;background:#f5f5f7;border-radius:8px;padding:7px 9px;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;min-width:0}
+.plat-num span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plat-num-more{color:#6e6e73;background:#f5f5f7;font-size:11.5px;gap:4px}
 .picon{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;color:#fff;font-size:10px;font-weight:800;flex:none}
 .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;border-top:1px solid var(--line);padding-top:13px}
 .metric .m-label{font-size:11px;color:var(--muted)}
-.metric .m-val{font-size:26px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1.2}
-.metric .m-val.sm{font-size:22px}
-.progress{height:5px;background:#edf0f7;border-radius:5px;overflow:hidden;margin-top:10px}
-.progress i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#3b82f6,#60a5fa)}
-.fans-num{font-size:44px;font-weight:800;letter-spacing:-2.5px;line-height:1;font-variant-numeric:tabular-nums;margin:2px 0 12px}
+.metric .m-val{font-size:27px;font-weight:600;letter-spacing:-.035em;font-variant-numeric:tabular-nums;line-height:1.15}
+.metric .m-val.sm{font-size:23px}
+.progress{height:5px;background:#e8e8ed;border-radius:5px;overflow:hidden;margin-top:10px}
+.progress i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#0071e3,#4da3ff)}
+.fans-num{font-size:46px;font-weight:600;letter-spacing:-.045em;line-height:1;font-variant-numeric:tabular-nums;margin:2px 0 12px}
 .legend{display:flex;gap:9px;flex-wrap:wrap;font-size:10.5px;color:#77778e;align-items:center}
 .legend span{display:flex;align-items:center;gap:4px}
 .legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
 .chart-note{font-size:10.5px;color:#b0b0c2;margin-top:8px}
 .insight-list{display:flex;flex-direction:column;gap:9px}
-.insight{background:#f7f8fc;border-radius:12px;padding:11px 13px;font-size:11.5px;line-height:1.6;color:#61617a}
-.insight b{color:var(--text)}
-.insight .tag{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;margin-right:7px;vertical-align:1px}
+.insight{background:#f5f5f7;border-radius:10px;padding:11px 13px;font-size:12px;line-height:1.6;color:#515154;letter-spacing:-.005em}
+.insight b{color:var(--text);font-weight:600}
+.insight .tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 9px;border-radius:999px;margin-right:7px;vertical-align:1px}
 .tag.g{background:#e7f7ef;color:#16865c}.tag.b{background:#e9f0ff;color:#2f6bff}.tag.o{background:#fff1e0;color:#c47a10}
 
-.week-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
-.stat{background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:16px 18px;display:flex;align-items:center;gap:13px;border:1px solid rgba(255,255,255,.9)}
-.stat .ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:17px;flex:none}
-.stat .lbl{font-size:11.5px;color:var(--muted);font-weight:600}
-.stat .val{font-size:23px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1.2}
-.stat .sub{font-size:10.5px;color:#a2a2b5}
+.week-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:0}
+.stat{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:16px 18px;display:flex;align-items:center;gap:13px;border:1px solid rgba(0,0,0,.04)}
+.stat .ico{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:16px;flex:none}
+.stat .lbl{font-size:11.5px;color:var(--muted);font-weight:500}
+.stat .val{font-size:24px;font-weight:600;letter-spacing:-.035em;font-variant-numeric:tabular-nums;line-height:1.15}
+.stat .sub{font-size:10.5px;color:#a1a1a6}
+.stat .val.stat-title{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mini-cover{width:38px;height:42px;border-radius:7px;background:linear-gradient(150deg,#fbf8ef,#efe9db);display:grid;place-items:center;font-size:9px;font-weight:800;color:#6d6a60;text-align:center;line-height:1.15;padding:3px;flex:none}
 
-.plat-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:11px;margin-top:14px}
-.pcard{background:#fff;border-radius:17px;box-shadow:var(--shadow);padding:14px 14px 12px;border:1px solid rgba(255,255,255,.9);min-width:0}
-.pcard .pc-head{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800}
+.plat-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:8px;margin-top:0}
+.pcard{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:11px 11px 9px;border:1px solid rgba(0,0,0,.04);min-width:0}
+.pcard .pc-head{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600}
 .pcard .pc-head .pname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pcard .pc-head .picon{margin-left:auto;background:transparent!important;font-size:13px!important}
-.pcard .pc-follow{font-size:24px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;margin:10px 0 3px}
-.pcard .pc-label{font-size:10px;color:var(--muted)}
-.pcard .pc-chips{display:flex;gap:5px;margin:7px 0 2px;flex-wrap:wrap}
-.pcard .pc-chip{font-size:10px;background:#f5f6fa;border-radius:6px;padding:3px 7px;color:#77778e;font-weight:600}
-.pcard .pc-foot{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:8px;padding-top:8px;font-size:10px;color:#9a9ab0;gap:4px}
-.pcard .pc-foot b{display:block;color:var(--text);font-size:12px}
+.pcard .pc-head .picon{background:transparent!important;font-size:10px!important;flex:none}
+.pcard .pc-follow{font-size:20px;font-weight:600;letter-spacing:-.035em;font-variant-numeric:tabular-nums;margin:6px 0 2px}
+.pcard .pc-label{font-size:9px;color:var(--muted)}
+.pcard .pc-chips{display:flex;gap:4px;margin:5px 0 0;flex-wrap:wrap}
+.pcard .pc-chip{font-size:9px;background:#f5f5f7;border-radius:5px;padding:2px 6px;color:#6e6e73;font-weight:500}
+.pcard svg{height:22px!important}
+.pcard .pc-foot{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:6px;padding-top:7px;font-size:9px;color:#a1a1a6;gap:4px}
+.pcard .pc-foot b{display:block;color:var(--text);font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
 
 /* ---------- 表格 ---------- */
 .tbl-wrap{overflow-x:auto}
@@ -148,14 +158,16 @@ tbody tr:hover{background:#fafbff}
 .donut-item b{font-variant-numeric:tabular-nums}
 .rec{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid var(--line)}
 .rec:last-child{border-bottom:0}
-.rec .rn{width:24px;height:24px;border-radius:8px;background:#eef3ff;color:var(--blue);display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
-.rec .rt{font-size:12px;line-height:1.6;color:#5e5e77}
-.rec .rt b{color:var(--text)}
+.rec .rn{width:24px;height:24px;border-radius:7px;background:#e8f1fd;color:var(--blue);display:grid;place-items:center;font-size:11px;font-weight:600;flex:none}
+.rec .rt{font-size:12.5px;line-height:1.6;color:#515154}
+.rec .rt b{color:var(--text);font-weight:600}
 
 /* ---------- 日历 ---------- */
-.cal-head{display:flex;align-items:center;gap:10px}
-.cal-head button{width:30px;height:30px;border:1px solid var(--line);background:#fff;border-radius:9px;cursor:pointer;color:#666}
-.cal-title{font-size:17px;font-weight:800;min-width:110px;text-align:center}
+.cal-head{display:flex;align-items:center;gap:10px;flex:none}
+.cal-head button:not(.btn){width:30px;height:30px;border:1px solid var(--line);background:#fff;border-radius:9px;cursor:pointer;color:#666;transition:all .3s var(--ease)}
+.cal-head button:not(.btn):hover{border-color:#c7c7cc;background:#f5f5f7}
+.cal-head .btn{white-space:nowrap}
+.cal-title{font-size:18px;font-weight:600;letter-spacing:-.02em;min-width:110px;text-align:center}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
 .cal-dow{text-align:center;font-size:11px;color:var(--muted);padding:6px 0;font-weight:700}
 .cal-cell{background:#fff;border-radius:12px;min-height:106px;border:1px solid var(--line);padding:8px;cursor:pointer;transition:.15s}
@@ -168,33 +180,38 @@ tbody tr:hover{background:#fafbff}
 .cal-post .nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cal-post .mt{color:#9b9bb0;font-size:9.5px;margin-top:2px}
 .cal-more{font-size:9.5px;color:#a0a0b4}
+.cal-hint{display:none}
 
 /* ---------- 账号 ---------- */
 .acc-list{display:flex;flex-direction:column}
 .acc-row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
 .acc-row:last-child{border-bottom:0}
 .acc-row .picon{width:32px;height:32px;font-size:13px;border-radius:9px}
-.acc-name{font-size:13px;font-weight:800}
+.acc-name{font-size:13.5px;font-weight:600;letter-spacing:-.01em}
 .acc-handle{font-size:11px;color:var(--muted)}
-.acc-fans{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
-.btn{border:0;border-radius:9px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;transition:.18s;font-family:inherit}
-.btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(47,107,255,.22)}
-.btn-primary:hover{background:#2559e6}
-.btn-ghost{background:#f3f4f9;color:#66667f}
-.btn-ghost:hover{background:#e9ebf3}
+.acc-fans{font-size:17px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.src-badge{display:inline-block;font-size:9.5px;font-weight:600;padding:1px 6px;border-radius:5px;vertical-align:1px;margin-left:4px}
+.src-badge.real{background:#e6f5ef;color:#1d9d74}
+.src-badge.demo{background:#f2f2f5;color:#8e8e93}
+.btn{border:0;border-radius:980px;padding:9px 18px;font-size:12.5px;font-weight:500;cursor:pointer;transition:all .3s var(--ease);font-family:inherit}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(0,113,227,.2)}
+.btn-primary:hover{background:#0077ed;transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,113,227,.28)}
+.btn-ghost{background:var(--soft);color:#515154}
+.btn-ghost:hover{background:#e8e8ed}
 .btn-danger{background:#fff0f0;color:#d9454a}
 .form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
-.field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:130px}
-.field label{font-size:11px;color:var(--muted);font-weight:700}
-.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:12.5px;font-family:inherit;color:var(--text);background:#fff;outline:none}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:#a9c0ff;box-shadow:0 0 0 3px rgba(47,107,255,.08)}
+.field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px}
+.field label{font-size:11px;color:var(--muted);font-weight:500}
+.field input,.field select,.field textarea{border:1px solid #d2d2d7;border-radius:9px;padding:9px 11px;font-size:12.5px;font-family:inherit;color:var(--text);background:#fff;outline:none;transition:all .25s var(--ease)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,113,227,.12)}
 .field textarea{width:100%;min-height:90px;resize:vertical;line-height:1.5}
 .hint{font-size:11px;color:var(--muted);line-height:1.6;background:#f7f8fc;border-radius:10px;padding:10px 12px}
 
 /* ---------- 弹窗 ---------- */
 .mask{position:fixed;inset:0;background:rgba(25,28,50,.32);backdrop-filter:blur(3px);display:grid;place-items:center;z-index:200;padding:20px}
 .modal{background:#fff;border-radius:20px;box-shadow:var(--shadow-lg);width:min(560px,100%);max-height:86vh;overflow:auto;padding:24px}
-.modal h3{font-size:18px;font-weight:800;margin-bottom:4px}
+.modal h3{font-size:19px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px}
 .modal .mp{font-size:12px;color:var(--muted);margin-bottom:18px}
 .modal-foot{display:flex;justify-content:flex-end;gap:9px;margin-top:16px}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#1e1e2d;color:#fff;padding:11px 20px;border-radius:999px;font-size:12.5px;z-index:300;box-shadow:0 8px 30px rgba(0,0,0,.2)}
@@ -202,15 +219,15 @@ tbody tr:hover{background:#fafbff}
 @media(max-width:1280px){
   .g-dash{grid-template-columns:1fr 1fr}
   .g-dash .card:last-child{grid-column:1/-1}
-  .plat-grid{grid-template-columns:repeat(4,1fr)}
   .week-strip{grid-template-columns:repeat(2,1fr)}
+  .plat-grid{grid-template-columns:repeat(6,minmax(0,1fr))}
 }
 @media(max-width:900px){
   .g-traffic,.g-insights{grid-template-columns:1fr}
   .top-right .status{display:none}
   .featured{grid-template-columns:1fr}
   .cover{width:100%;height:180px}
-  .plat-grid{grid-template-columns:repeat(2,1fr)}
+  .plat-grid{grid-template-columns:repeat(10,118px);overflow-x:auto;padding-bottom:4px}
 }
 
 /* ============ 发布中心 ============ */
@@ -252,6 +269,249 @@ tbody tr:hover{background:#fafbff}
 .pub-logs{background:#1c2030;border-radius:10px;padding:11px 13px;max-height:180px;overflow:auto;font-family:Consolas,Monaco,monospace;font-size:10.5px;color:#b8c4e0;line-height:1.7}
 .pub-logs div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:1000px){.g-publish{grid-template-columns:1fr}.plat-check-grid{grid-template-columns:1fr 1fr}}
+
+/* ============ 平台详情（多账号） ============ */
+.pf-back{background:none;border:0;padding:0;font:inherit;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:8px;display:inline-flex;align-items:center;gap:3px;transition:color .3s var(--ease)}
+.pf-back:hover{color:var(--blue)}
+.pf-title{display:flex;align-items:center;gap:9px}
+.pf-title > span{font-size:30px;letter-spacing:-.035em;font-weight:600;line-height:1.1}
+.kpi-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.kpi{background:#fff;border-radius:15px;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.04);padding:14px 16px}
+.kpi .k-lbl{font-size:11px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .k-val{font-size:25px;font-weight:600;letter-spacing:-.038em;font-variant-numeric:tabular-nums;line-height:1.2;margin-top:4px}
+.kpi .k-sub{font-size:10px;color:#a1a1a6;margin-top:2px}
+.acc-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:11px}
+.acc-card{border:1px solid var(--line);border-radius:14px;padding:13px 14px 11px;background:#fff;transition:border-color .4s var(--ease),box-shadow .4s var(--ease)}
+.acc-card:hover{border-color:#d6d6dc;box-shadow:0 6px 20px rgba(0,0,0,.05)}
+.ac-top{display:flex;align-items:flex-start;gap:7px}
+.ac-dot{width:7px;height:7px;border-radius:50%;margin-top:6px;flex:none}
+.ac-rank{font-size:9px;font-weight:700;color:#0071e3;background:#eaf3ff;border-radius:5px;padding:1px 5px;margin-left:5px;vertical-align:1px}
+.ac-fans{font-size:26px;font-weight:600;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1.1;margin:7px 0 6px}
+.ac-share{display:flex;align-items:center;gap:7px;font-size:10px;color:#a1a1a6}
+.ac-track{flex:1;height:4px;border-radius:4px;background:#f0f0f4;overflow:hidden}
+.ac-track i{display:block;height:100%;border-radius:4px}
+.ac-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:11px;padding-top:10px;border-top:1px solid var(--line)}
+.ac-l{font-size:9.5px;color:#a1a1a6}
+.ac-v{font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:1px}
+.ac-foot{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:9.5px;color:#b0b0c2}
+.acc-card svg{margin-top:8px}
+.ac-foot span:last-of-type{margin-left:auto}
+.acc-add{border-style:dashed;border-color:#d8d8de;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:168px;cursor:pointer;background:#fcfcfd;transition:border-color .4s var(--ease),background .4s var(--ease)}
+.acc-add:hover{border-color:#9db8ff;background:#f7faff}
+.ac-add-t{font-size:12.5px;font-weight:600;color:#0071e3}
+.ac-add-sub{font-size:10px;color:#b0b0c2}
+.ac-sync{border:0;background:var(--soft);color:#515154;border-radius:999px;padding:3px 9px;font-size:9.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .3s var(--ease)}
+.ac-sync:hover{background:#e8e8ed;color:var(--blue)}
+.ac-sync:disabled{opacity:.5;cursor:default}
+.g-pf{grid-template-columns:1.35fr 1fr}
+.g-pf-wide{grid-template-columns:1.55fr 1fr}
+.hbar-list{display:flex;flex-direction:column;gap:11px}
+.hbar-row{display:flex;align-items:center;gap:10px;font-size:11.5px}
+.hb-title{width:150px;flex:none;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#1d1d1f;font-weight:500}
+.hb-title span{color:#b0b0c2;font-size:9.5px;margin-left:6px;font-weight:400}
+.hb-track{flex:1;height:7px;border-radius:5px;background:#f2f2f5;overflow:hidden}
+.hb-track i{display:block;height:100%;border-radius:5px;opacity:.9}
+.hb-val{width:58px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:#515154;flex:none}
+.pcard{position:relative;cursor:pointer}
+.pc-n{position:absolute;right:8px;top:8px;font-size:8.5px;font-weight:800;color:#0071e3;background:#eaf3ff;border-radius:4px;padding:1px 4px;line-height:1.3}
+.pc-go{position:absolute;right:9px;bottom:7px;font-size:12px;color:#c7c7cc;opacity:0;transition:opacity .35s var(--ease),transform .35s var(--ease);line-height:1}
+.pcard:hover .pc-go{opacity:1;transform:translateX(2px);color:var(--blue)}
+@media(max-width:1280px){
+  .kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .g-pf,.g-pf-wide{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+  .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hb-title{width:104px}
+}
+
+/* ============ Apple-style motion：克制的过渡与入场动效 ============ */
+@keyframes wb-fade-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes wb-fade{from{opacity:0}to{opacity:1}}
+
+/* 视图切换：主内容淡入上移，逐层错落（用 backwards，动画结束后不锁死 transform，保留 hover 效果） */
+#mainContent{animation:wb-fade .45s var(--ease) backwards}
+#mainContent > *{animation:wb-fade-up .55s var(--ease) backwards}
+#mainContent > *:nth-child(1){animation-delay:.02s}
+#mainContent > *:nth-child(2){animation-delay:.07s}
+#mainContent > *:nth-child(3){animation-delay:.12s}
+#mainContent > *:nth-child(4){animation-delay:.17s}
+#mainContent > *:nth-child(5){animation-delay:.22s}
+#mainContent > *:nth-child(6){animation-delay:.27s}
+
+/* 卡片悬停：轻微抬升 + 阴影加深 */
+.card,.stat,.pcard,.cal-cell{transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .4s var(--ease)}
+.card:hover{box-shadow:0 2px 4px rgba(0,0,0,.03),0 14px 40px rgba(0,0,0,.09)}
+.stat:hover{transform:translateY(-3px);box-shadow:0 2px 6px rgba(0,0,0,.04),0 14px 34px rgba(0,0,0,.1)}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 2px 6px rgba(0,0,0,.04),0 12px 30px rgba(0,0,0,.11);border-color:rgba(0,113,227,.25)}
+.cal-cell:hover{transform:translateY(-2px)}
+
+/* 图表 SVG 平滑出现 */
+.chart-box svg,.plat-grid svg{transition:opacity .6s var(--ease)}
+
+/* 链接、标签按钮的细腻反馈 */
+.link,.task-links a{transition:opacity .25s var(--ease)}
+.link:hover,.task-links a:hover{opacity:.65}
+.icon-btn{transition:all .3s var(--ease)}
+.icon-btn:active{transform:scale(.9) rotate(-30deg)}
+
+/* 尊重系统「减少动态效果」设置 */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+/* ==========================================================================
+   移动端适配
+   关键根因：#mainContent 是纵向 flex 容器，子项默认 min-width:auto，
+   内部横向滚动区（平台卡片、表格）会把「整页」撑宽，导致手机端整页横向偏移、
+   导航被挤成一字一行。下面先修根因，再逐块收敛布局。
+   ========================================================================== */
+#mainContent > *{min-width:0}
+/* 同理：grid 子项默认 min-width:auto，卡片里含宽表格时会把整张卡撑出屏幕 */
+.grid > *{min-width:0}
+html,body{max-width:100%;overflow-x:hidden}
+
+@media(max-width:1024px){
+  .app{padding:14px 16px 24px}
+  .g-dash{grid-template-columns:1fr 1fr}
+}
+
+/* 中屏（平板竖屏 / 桌面窄窗口）：顶栏换行、导航横向滚动，避免按钮被挤成一字一行 */
+@media(max-width:900px){
+  .topbar{height:auto;padding:9px 12px;gap:8px 10px;flex-wrap:wrap;border-radius:14px;top:8px}
+  .brand{min-width:0}
+  .tabs{order:3;width:100%;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:0 0 auto;white-space:nowrap;padding:7px 14px}
+  .view-head{flex-wrap:wrap;align-items:flex-start;gap:10px}
+  .view-head > div:first-child{flex:1 1 100%}
+  .pill-row{overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px;scrollbar-width:none}
+  .pill-row::-webkit-scrollbar{display:none}
+  .pill{flex:0 0 auto}
+  .g-dash{grid-template-columns:1fr}
+}
+
+
+@media(max-width:760px){
+  .app{padding:10px 12px 20px}
+
+  /* 顶栏：品牌与时钟一行，导航另起一行横向滚动 */
+  .topbar{height:auto;padding:9px 12px;gap:8px 10px;flex-wrap:wrap;top:6px;border-radius:14px;margin-bottom:6px}
+  .brand{min-width:0;gap:8px}
+  .brand-mark{width:28px;height:28px;font-size:14px;border-radius:8px}
+  .brand-text strong{font-size:13.5px}
+  .brand-text span{font-size:9.5px}
+  .tabs{order:3;width:100%;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;padding:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:0 0 auto;white-space:nowrap;padding:7px 13px;font-size:12px}
+  .top-right{margin-left:auto;gap:8px}
+  .top-right .status{display:none}
+  .clock{font-size:11.5px}
+  .icon-btn{width:26px;height:26px;font-size:14px}
+
+  /* 页头：标题与操作区上下排，不再抢宽度 */
+  .view-head{flex-direction:column;align-items:stretch;gap:10px;margin:0}
+  .view-head h1{font-size:23px}
+  .pf-title>span{font-size:23px}
+  .view-head p{font-size:11.5px;margin-top:4px;line-height:1.55}
+  .pill-row{overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .pill-row::-webkit-scrollbar{display:none}
+  .pill{flex:0 0 auto;padding:6px 12px;font-size:11.5px}
+  .btn{padding:8px 15px;font-size:12px}
+
+  #mainContent{gap:12px}
+  .card{padding:15px 14px;border-radius:15px}
+  .card-title{font-size:15px}
+  .card-sub{font-size:11px;line-height:1.5}
+  .card-head{margin-bottom:12px;flex-wrap:wrap;gap:6px}
+  .grid{gap:12px}
+  .g-dash,.g-traffic,.g-insights,.g-pf,.g-pf-wide,.g-publish{grid-template-columns:1fr}
+
+  .week-strip{grid-template-columns:1fr 1fr;gap:10px}
+  /* 两列时横排会把标题挤成三行，改为图标在上、文字通栏 */
+  .stat{flex-direction:column;align-items:flex-start;gap:7px;padding:12px 13px}
+  .stat > div:last-child{min-width:0;width:100%}
+  .stat .ico{width:30px;height:30px;font-size:14px;border-radius:9px}
+  .stat .lbl{font-size:10px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stat .val{font-size:18px;line-height:1.2;max-width:100%;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stat .sub{font-size:9.5px;margin-top:1px}
+  .stat .val.stat-title{font-size:13.5px;white-space:normal;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+  .mini-cover{width:30px;height:32px;font-size:8px;border-radius:6px}
+  .big-num{font-size:36px}
+  .fans-num{font-size:38px}
+  .featured{grid-template-columns:1fr;gap:14px}
+  .cover{display:none}
+  .plat-nums{grid-template-columns:1fr 1fr;gap:6px}
+  .plat-num{font-size:12px}
+  .metrics{grid-template-columns:repeat(3,1fr);gap:8px}
+  .metric .m-val{font-size:21px}
+  .metric .m-val.sm{font-size:18px}
+  .metric .m-label{font-size:10.5px}
+  .insight{font-size:11.5px;padding:10px 12px}
+
+  /* 平台卡片：单行横滑，避免 10 列把页面撑开 */
+  .plat-grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:112px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;scrollbar-width:none}
+  .plat-grid::-webkit-scrollbar{display:none}
+  .pcard{scroll-snap-align:start}
+  .pcard .pc-follow{font-size:18px}
+
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .kpi{padding:11px 12px;border-radius:13px}
+  .kpi .k-val{font-size:20px}
+  .kpi .k-lbl{font-size:10.5px}
+  .kpi .k-sub{font-size:9.5px}
+  .acc-cards{grid-template-columns:1fr}
+  .acc-add{min-height:94px}
+  .ac-fans{font-size:23px}
+  .ac-stats{gap:4px}
+
+  .donut-wrap{flex-direction:column;align-items:center;gap:12px}
+  .donut-list{width:100%}
+  .chart-note{font-size:9.5px;line-height:1.5}
+
+  /* 单条内容：标题独占一行，进度条换行铺满 */
+  .hbar-row{flex-wrap:wrap;gap:4px 8px}
+  .hb-title{width:calc(100% - 64px);font-size:11.5px}
+  .hb-val{width:56px}
+  .hb-track{order:3;flex:1 0 100%}
+
+  .tbl-wrap{margin:0 -14px;padding:0 14px}
+  table{font-size:11px}
+  th{padding:7px 8px;font-size:10px}
+  td{padding:8px}
+
+  .cal-head{width:100%;justify-content:space-between;gap:6px}
+  .cal-title{font-size:16px;min-width:86px}
+  /* 折线 / 堆叠图等比缩到 366px 会把刻度和数据点压得看不清，改为可横向滑动 */
+  .chart-box{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .chart-box::-webkit-scrollbar{display:none}
+  .chart-box svg{min-width:520px}
+
+  .cal-hint{display:block;text-align:center;font-size:10px;color:#b0b0c2;margin-top:8px}
+  .cal-scroll{overflow-x:auto;margin:0 -14px;padding:0 14px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .cal-scroll::-webkit-scrollbar{display:none}
+  .cal-scroll .cal-grid{min-width:588px}
+  .cal-cell{min-height:88px;padding:6px;border-radius:10px}
+  .cal-post{font-size:9.5px}
+  .cal-grid{gap:5px}
+
+  .modal{padding:18px;border-radius:16px;max-height:90vh}
+  .modal h3{font-size:17px}
+  .modal-foot{flex-wrap:wrap-reverse}
+  .form-row{gap:8px}
+  .field{min-width:100%}
+  .pub-logs{max-height:140px}
+  .pub-alert{font-size:11px;line-height:1.5;padding:10px 12px;align-items:flex-start;gap:8px}
+  .foot{font-size:10px;padding:12px 6px 0;line-height:1.5}
+}
+
+@media(max-width:420px){
+  .metric .m-val{font-size:19px}
+  .kpi .k-val{font-size:18px}
+  .stat .val{font-size:19px}
+  .big-num{font-size:32px}
+  .fans-num{font-size:34px}
+}
 
 </style>
 </head>
@@ -425,7 +685,7 @@ tbody tr:hover{background:#fafbff}
       ? `双击项目目录里的 <b>启动发布中心.bat</b>，<br>看到「发布中心已启动」后刷新本页即可。<br><br>发布服务负责驱动你本机的 Chrome 和推送微信通知，<br>数据全部在你本机，不上传任何服务器。`
       : `当前是部署在云端的只读数据看板。<br>自动发布要驱动<b>你自己电脑上的 Chrome 和登录态</b>，<br>这一步只能在本地完成，无法放在云服务器上。<br><br>在本机运行项目里的 <b>启动发布中心.bat</b>，<br>即可解锁完整的自动发布 + 微信通知功能。数据依然全在本机。`;
     return `<div class="view-head"><div><h1>发布中心</h1><p>${local ? '自动发布需要本地服务运行中' : '线上只读版 · 发布功能请在本机使用'}</p></div></div>
-      <div class="card" style="max-width:640px;margin:40px auto;text-align:center;padding:48px">
+      <div class="card" style="max-width:640px;margin:0 auto;text-align:center;padding:48px">
         <div style="font-size:44px;margin-bottom:14px">${local ? '🔌' : '☁️'}</div>
         <div class="card-title" style="font-size:19px;margin-bottom:10px">${h1}</div>
         <p class="card-sub" style="line-height:1.8;margin-bottom:20px">${body}</p>
@@ -619,10 +879,18 @@ tbody tr:hover{background:#fafbff}
     { key: 'douyin',   name: '抖音',     glyph: '抖', color: '#18181B', bg: '#F0F0F2' },
     { key: 'xhs',      name: '小红书',   glyph: '红', color: '#FF2442', bg: '#FFECEF' },
     { key: 'sph',      name: '视频号',   glyph: '视', color: '#FA9D3B', bg: '#FFF2E4' },
-    { key: 'youtube',  name: 'YouTube',  glyph: '▶', color: '#FF0033', bg: '#FFE9EC' },
+    { key: 'youtube',  name: 'YouTube',  glyph: '▶',  color: '#FF0033', bg: '#FFE9EC' },
     { key: 'x',        name: 'X',        glyph: 'X',  color: '#18181B', bg: '#F0F0F2' },
-    { key: 'course',   name: '课程站',   glyph: '课', color: '#6C5CE7', bg: '#EFECFF' }
+    { key: 'tiktok',   name: 'TikTok',   glyph: '♪',  color: '#010101', bg: '#F0F0F2' },
+    { key: 'instagram',name: 'Instagram',glyph: '◎',  color: '#E1306C', bg: '#FFEAF3' },
+    { key: 'reddit',   name: 'Reddit',   glyph: 'r/', color: '#FF4500', bg: '#FFEDE6' },
+    { key: 'discord',  name: 'Discord',  glyph: 'D',  color: '#5865F2', bg: '#ECEEFE' }
   ];
+  // 各平台默认播放占比（用于新建内容在缺省权重时按平台分配）
+  const SHARE = {
+    bilibili: .09, douyin: .30, xhs: .16, sph: .06, youtube: .03, x: .22,
+    tiktok: .07, instagram: .04, reddit: .02, discord: .01
+  };
   const PMAP = Object.fromEntries(PLATFORMS.map(p => [p.key, p]));
   const KEYS = PLATFORMS.map(p => p.key);
   const STORE_KEY = 'mailuo-social-dashboard-v2';
@@ -645,9 +913,23 @@ tbody tr:hover{background:#fafbff}
     return `<span class="picon" style="background:${p.bg};color:${p.color};${extra}">${p.glyph}</span>`;
   };
   const trunc = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(0, n) + '…' : s; };
+  // 平台多了以后，图表按数值取前 N 名，其余合并为「其他」，避免图例与线条过密
+  function groupSeries(list, max = 6) {
+    if (list.length <= max + 1) return list;
+    const sorted = list.slice().sort((a, b) => sum(b.values) - sum(a.values));
+    const head = sorted.slice(0, max);
+    const rest = sorted.slice(max);
+    head.push({
+      name: '其他', color: '#C7C7CC',
+      values: rest[0].values.map((_, i) => sum(rest.map(r => r.values[i] || 0)))
+    });
+    return head;
+  }
 
   /* ============ 演示数据 ============ */
   function genHistory(followers, days = 30) {
+    // 没有真实粉丝数时不伪造历史，避免出现「0 粉丝却有涨粉」
+    if (!followers || followers <= 0) return [];
     const out = [], base = Math.max(1, followers * 0.0017);
     for (let i = days - 1; i >= 0; i--) {
       const d = addDays(today(), -i);
@@ -658,9 +940,11 @@ tbody tr:hover{background:#fafbff}
     return out;
   }
   function makeStats(total, weights) {
-    const w = weights || [0.09, 0.32, 0.17, 0.07, 0.03, 0.31, 0.01];
-    const views = w.map(x => Math.round(total * x));
-    views[0] += total - sum(views);
+    // 权重按 KEYS 顺序排列；未提供或数量不足时按平台默认占比补齐，最后归一化
+    const w = KEYS.map((k, i) => (weights && weights[i] != null) ? weights[i] : (SHARE[k] || 0));
+    const tw = sum(w) || 1;
+    const views = w.map(x => Math.round(total * x / tw));
+    views[0] += Math.round(total || 0) - sum(views);
     const out = {};
     KEYS.forEach((k, i) => {
       const v = Math.max(0, views[i]);
@@ -674,13 +958,21 @@ tbody tr:hover{background:#fafbff}
     });
     return out;
   }
-  function seedState() {
-    const followers = { bilibili: 16139, douyin: 12863, xhs: 19475, sph: 4601, youtube: 325, x: 6042, course: 3433 };
-    const accounts = PLATFORMS.map((p, i) => ({
+  const SEED_FOLLOWERS = {
+    bilibili: 16139, douyin: 12863, xhs: 19475, sph: 4601, youtube: 325, x: 6042,
+    tiktok: 5210, instagram: 3860, reddit: 1240, discord: 680
+  };
+  function seedAccount(p) {
+    const f = SEED_FOLLOWERS[p.key] || 800;
+    return {
       id: 'acc_' + p.key, platform: p.key,
       name: p.name + ' · 主账号', handle: '@mailuo_' + p.key,
-      followers: followers[p.key], history: genHistory(followers[p.key])
-    }));
+      followers: f, history: genHistory(f)
+    };
+  }
+  function seedAccounts() { return PLATFORMS.map(seedAccount); }
+  function seedState() {
+    const accounts = seedAccounts();
     const P = (daysAgo, title, total, status, weights) => {
       const d = addDays(today(), -daysAgo);
       return {
@@ -701,21 +993,119 @@ tbody tr:hover{background:#fafbff}
       { id: 'post_f1', title: '把微信群聊交给 AI', date: dateKey(today()), time: '18:00', status: '等待点布', cover: '把微信群聊交给 AI', stats: makeStats(0) },
       { id: 'post_f2', title: 'AI 剪辑实测：第二期', date: dateKey(addDays(today(), 2)), time: '18:00', status: '计划中', cover: 'AI 剪辑实测：第二期', stats: makeStats(0) }
     ];
-    return { accounts, posts, activeView: 'dashboard', range: 7, month: { y: today().getFullYear(), m: today().getMonth() } };
+    return { accounts, posts, activeView: 'dashboard', range: 7, schema: SCHEMA, month: { y: today().getFullYear(), m: today().getMonth() } };
   }
+  const SCHEMA = 4; // 数据结构版本：用于老数据一次性迁移
   function loadState() {
+    let s = seedState();
     try {
       const raw = localStorage.getItem(STORE_KEY);
       if (raw) {
-        const s = JSON.parse(raw);
-        if (s.accounts && s.posts) return Object.assign(seedState(), s);
+        const parsed = JSON.parse(raw);
+        if (parsed.accounts && parsed.posts) {
+          s = Object.assign(seedState(), parsed);
+          s.schema = parsed.schema || 0; // 老数据没有版本号 → 触发一次迁移
+        }
       }
     } catch (e) { /* ignore */ }
-    return seedState();
+    const prev = s.schema || 0;
+    if (prev !== SCHEMA) {
+      // 清理已下线平台的账号与内容数据（不在当前平台列表中的一律移除）
+      s.accounts = (s.accounts || []).filter(a => PMAP[a.platform]);
+      (s.posts || []).forEach(p => {
+        if (!p.stats) return;
+        Object.keys(p.stats).forEach(k => { if (!PMAP[k]) delete p.stats[k]; });
+      });
+      if (prev < 3) {
+        // 迁移：补齐当时新增平台的账号（老数据里只有最初 7 个平台）
+        const has = new Set((s.accounts || []).map(a => a.platform));
+        PLATFORMS.forEach(p => { if (!has.has(p.key)) s.accounts.push(seedAccount(p)); });
+        // 迁移：老内容补齐新平台的播放/互动数据，避免卡片显示 0
+        (s.posts || []).forEach(p => {
+          if (!p.stats) p.stats = {};
+          const base = sum(KEYS.map(k => (p.stats[k] || {}).views || 0));
+          KEYS.forEach(k => {
+            if (p.stats[k]) return;
+            const v = Math.round(base * (SHARE[k] || 0));
+            p.stats[k] = {
+              views: v,
+              likes: Math.round(v * (0.018 + Math.random() * 0.022)),
+              comments: Math.round(v * (0.003 + Math.random() * 0.004)),
+              saves: Math.round(v * (0.006 + Math.random() * 0.012)),
+              shares: Math.round(v * (0.002 + Math.random() * 0.005))
+            };
+          });
+        });
+      }
+      s.schema = SCHEMA;
+      // 迁移结果立即落盘，避免用户删掉某平台账号后又被自动补回
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch (e) { /* ignore */ }
+    }
+    return s;
   }
   let state = loadState();
   function saveState() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+  }
+
+  /* ============ 真实账号导入（调用本机服务抓取） ============ */
+  const LOCAL_API = (location.hostname === '127.0.0.1' || location.hostname === 'localhost')
+    ? location.origin
+    : 'http://127.0.0.1:8899';
+  async function localApi(path, data) {
+    let res;
+    try {
+      res = await fetch(LOCAL_API + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data || {})
+      });
+    } catch (e) {
+      throw new Error('连不上本机服务，请先双击运行「启动发布中心.bat」再试');
+    }
+    if (!res.ok) throw new Error('本机服务返回 HTTP ' + res.status);
+    return res.json();
+  }
+  function rsStatus(msg, kind) {
+    const el = $('#rsStatus');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = kind === 'err' ? '#c0392b' : kind === 'ok' ? '#1d9d74' : '';
+  }
+  // 把抓取结果写入账号：优先更新同名账号；否则把该平台的示例账号升级为真实账号；再否则新建
+  function applyReal(d, input) {
+    const key = dateKey(today());
+    const f = d.followers == null ? null : Math.max(0, Math.round(d.followers));
+    const raw = input;
+    let hit = state.accounts.find(a => a.platform === d.platform && ((d.handle && a.handle === d.handle) || (a.url && a.url === raw)));
+    if (!hit) hit = state.accounts.find(a => a.platform === d.platform && !a.real); // 示例账号原地升级
+    if (hit) {
+      const wasReal = !!hit.real;
+      const prev = +hit.followers || 0;
+      if (f != null) hit.followers = f;
+      hit.name = d.name || hit.name;
+      hit.handle = d.handle || hit.handle;
+      hit.real = true; hit.url = raw; hit.lastSync = key; hit.source = d.source || hit.source;
+      // 示例账号的假历史要丢掉，真实账号则保留并累计当天变化
+      if (!Array.isArray(hit.history) || !wasReal) hit.history = [];
+      const last = hit.history[hit.history.length - 1];
+      // 首次抓取（示例→真实 / 原本没有基线）只记基线，不算涨粉
+      const delta = (f != null && wasReal && prev) ? f - prev : 0;
+      if (last && last.date === key) last.delta = (last.delta || 0) + delta;
+      else hit.history.push({ date: key, delta });
+      return hit;
+    }
+    const acc = {
+      id: 'acc_' + Math.random().toString(36).slice(2, 9),
+      platform: d.platform,
+      name: d.name || (PMAP[d.platform] ? PMAP[d.platform].name : d.platform),
+      handle: d.handle || raw,
+      followers: f == null ? 0 : f,
+      real: true, url: raw, source: d.source || '', lastSync: key,
+      history: [{ date: key, delta: 0 }]
+    };
+    state.accounts.push(acc);
+    return acc;
   }
 
   /* ============ 派生计算 ============ */
@@ -824,14 +1214,21 @@ tbody tr:hover{background:#fafbff}
     const W = 660, H = 258, PL = 46, PR = 12, PT = 18, PB = 28;
     const pw = W - PL - PR, ph = H - PT - PB;
     const all = series.reduce((a, s) => a.concat(s.values), []);
-    const yMax = Math.max(Math.ceil(Math.max(...all, 1) * 1.12), 10);
+    const hi = Math.max(...all, 1), lo = Math.min(...all);
+    let yMin = 0, yMax = Math.max(Math.ceil(hi * 1.12), 10);
+    // 累计值这类高位窄幅数据：从 0 起画会压成一条直线，改为按数据区间自适应
+    if (opts.zoom) {
+      const pad = Math.max(1, (hi - lo) * 0.25);
+      yMin = Math.max(0, Math.floor(lo - pad));
+      yMax = Math.ceil(hi + pad);
+    }
     const xAt = i => PL + pw * (dates.length < 2 ? 0 : i / (dates.length - 1));
-    const yAt = v => PT + ph * (1 - v / yMax);
+    const yAt = v => PT + ph * (1 - (v - yMin) / (yMax - yMin || 1));
     let g = '';
     [0, .25, .5, .75, 1].forEach(f => {
       const y = PT + ph * (1 - f);
       g += `<line x1="${PL}" y1="${y}" x2="${W - PR}" y2="${y}" stroke="#eef0f6"/>`;
-      g += `<text x="${PL - 7}" y="${y + 4}" text-anchor="end" font-size="10" fill="#b2b2c3">${f === 1 ? fmt(yMax) : fmt(yMax * f)}</text>`;
+      g += `<text x="${PL - 7}" y="${y + 4}" text-anchor="end" font-size="10" fill="#b2b2c3">${fmt(yMin + (yMax - yMin) * f)}</text>`;
     });
     series.forEach((s, si) => {
       const pts = s.values.map((v, i) => ({ x: xAt(i), y: yAt(v) }));
@@ -847,7 +1244,7 @@ tbody tr:hover{background:#fafbff}
     dates.forEach((d, i) => { if (i % 5 === 0 || i === dates.length - 1) g += `<text x="${xAt(i).toFixed(1)}" y="${H - 7}" text-anchor="middle" font-size="9.5" fill="#b2b2c3">${d.slice(5)}</text>`; });
     return `<div class="chart-box"><svg viewBox="0 0 ${W} ${H}">${g}</svg></div>`;
   }
-  function barChart(labels, values, color = '#3b82f6') {
+  function barChart(labels, values, color = '#0071e3') {
     const W = 640, H = 210, PL = 30, PR = 10, PT = 14, PB = 26;
     const pw = W - PL - PR, ph = H - PT - PB;
     const yMax = Math.max(Math.ceil(Math.max(...values, 1) * 1.2), 3);
@@ -864,7 +1261,7 @@ tbody tr:hover{background:#fafbff}
     });
     return `<div class="chart-box"><svg viewBox="0 0 ${W} ${H}">${g}</svg></div>`;
   }
-  function donutChart(items) {
+  function donutChart(items, opts = {}) {
     const size = 170, c = size / 2, r = 66, sw = 20, total = sum(items.map(i => i.value)) || 1;
     const C = 2 * Math.PI * r; let off = 0, g = '';
     items.forEach(it => {
@@ -872,7 +1269,7 @@ tbody tr:hover{background:#fafbff}
       g += `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${it.color}" stroke-width="${sw}" stroke-dasharray="${Math.max(0, len - 2).toFixed(2)} ${(C - len + 2).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${c} ${c})"><title>${it.name} ${fmt(it.value)}</title></circle>`;
       off += len;
     });
-    g += `<text x="${c}" y="${c - 1}" text-anchor="middle" font-size="19" font-weight="800" fill="#1b1b2b">${fmt(total)}</text><text x="${c}" y="${c + 16}" text-anchor="middle" font-size="10" fill="#a0a0b4">总播放</text>`;
+    g += `<text x="${c}" y="${c - 1}" text-anchor="middle" font-size="19" font-weight="800" fill="#1b1b2b">${opts.value != null ? opts.value : fmt(total)}</text><text x="${c}" y="${c + 16}" text-anchor="middle" font-size="10" fill="#a0a0b4">${opts.label || '总播放'}</text>`;
     return `<svg viewBox="0 0 ${size} ${size}" style="width:158px;height:158px;flex:none">${g}</svg>`;
   }
   function sparkline(values, color) {
@@ -900,7 +1297,7 @@ tbody tr:hover{background:#fafbff}
     const rates = KEYS.map(k => platformAgg(k)).filter(a => a.views > 0).sort((a, b) => b.rate - a.rate);
     const best = rates[0] || { key: 'bilibili', rate: 0 }, worst = rates[rates.length - 1] || { key: 'x', rate: 0 };
     return [
-      { tag: '涨粉', cls: 'g', html: `近 7 天涨粉最多的是 <b>${PMAP[top.key].name} +${fmt(top.v)}</b>，占六平台合计 +${fmt(total)} 的 <b>${Math.round(top.v / total * 100)}%</b>。` },
+      { tag: '涨粉', cls: 'g', html: `近 7 天涨粉最多的是 <b>${PMAP[top.key].name} +${fmt(top.v)}</b>，占 ${KEYS.length} 平台合计 +${fmt(total)} 的 <b>${Math.round(top.v / total * 100)}%</b>。` },
       { tag: '发布日', cls: 'g', html: `发布当天平均涨粉 <b>${fmt(pubAvg)}</b>，非发布日 <b>${fmt(nonAvg)}</b>，<b>${diff >= 0 ? '高' : '低'} ${Math.abs(diff)}%</b>。` },
       { tag: '播放', cls: 'b', html: `近 30 天 <b>${Math.round(vp.v / vtotal * 100)}%</b> 的播放来自 <b>${PMAP[vp.key].name}</b>（${fmt(vp.v)} / ${fmt(vtotal)}）。` },
       { tag: '互动', cls: 'o', html: `互动率最高的是 <b>${PMAP[best.key].name} ${best.rate.toFixed(1)}%</b>，最低 ${PMAP[worst.key].name} ${worst.rate.toFixed(1)}%，相差 <b>${(best.rate / (worst.rate || 1)).toFixed(1)} 倍</b>。` }
@@ -938,10 +1335,11 @@ tbody tr:hover{background:#fafbff}
     const notes = [];
     published().slice(0, 2).forEach((p, i) => { const idx = dates.indexOf(p.date); if (idx >= 0) notes.push({ index: idx, label: trunc(p.title, 6), row: i % 2 }); });
     // 按平台分别取 30 天序列并对齐日期
-    const aligned = KEYS.filter(k => state.accounts.some(a => a.platform === k)).map(k => {
+    const alignedAll = KEYS.filter(k => state.accounts.some(a => a.platform === k)).map(k => {
       const m = Object.fromEntries(historyOf(k).map(h => [h.date, h.delta]));
       return { name: PMAP[k].name, color: PMAP[k].color, values: dates.map(d => m[d] || 0) };
     });
+    const aligned = groupSeries(alignedAll, 6);
     return `
       <div class="view-head">
         <div><h1>数据大屏</h1><p>全平台内容监控 · 覆盖 ${state.accounts.length} 个账号 · 最近 ${state.range} 天</p></div>
@@ -950,16 +1348,34 @@ tbody tr:hover{background:#fafbff}
           <button class="pill" data-action="open-post">+ 新增内容</button>
         </div>
       </div>
+      <section class="plat-grid">
+        ${PLATFORMS.filter(p => state.accounts.some(a => a.platform === p.key)).map(p => {
+          const a = platformAgg(p.key);
+          return `<div class="pcard" data-action="open-platform" data-key="${p.key}" title="进入 ${p.name} 多账号分析">
+            <span class="pc-go">›</span>
+            <div class="pc-head">${picon(p.key)}<span class="pname">${p.name}</span>${a.count > 1 ? `<span class="pc-n">${a.count}</span>` : ''}</div>
+            <div class="pc-follow">${fmt(a.followers)}</div>
+            <div class="pc-chips"><span class="pc-chip">今日 <b class="up">+${fmt(a.today)}</b></span><span class="pc-chip">7天 <b class="up">+${fmt(a.week)}</b></span></div>
+            ${sparkline(a.series.slice(-30), p.color)}
+            <div class="pc-foot"><div>7日播放<b>${fmt(sum(recentPosts(7).map(x => (x.stats[p.key] || {}).views || 0)))}</b></div><div>互动率<b>${a.rate.toFixed(1)}%</b></div></div>
+          </div>`;
+        }).join('')}
+      </section>
       <section class="grid g-dash">
         <div class="card">
           <div class="card-head"><div class="card-title">最新发布</div><div class="card-sub">全平台同步状态</div></div>
           ${feat ? `<div class="featured">
-            <div class="cover"><span class="cv-badge">第 ${published().length} 期</span><div class="cv-title">${esc(feat.cover)}</div><div class="cv-bar"></div><div class="cv-foot">口播稿从 2 小时到 20 分钟</div><div class="cv-live"><i class="dot green"></i>${KEYS.filter(k => (feat.stats[k] || {}).views > 0).length}/7 平台已发布</div></div>
+            <div class="cover"><span class="cv-badge">第 ${published().length} 期</span><div class="cv-title">${esc(feat.cover)}</div><div class="cv-bar"></div><div class="cv-foot">口播稿从 2 小时到 20 分钟</div><div class="cv-live"><i class="dot green"></i>${KEYS.filter(k => (feat.stats[k] || {}).views > 0).length}/${KEYS.length} 平台已发布</div></div>
             <div>
               <div class="date-pills"><span class="date-pill on">昨天 18:00</span><span class="date-pill">明天 18:00</span><span class="date-pill">${dateKey(today()).slice(5)} 18:00</span></div>
               <div class="feat-title">${esc(feat.title)}</div>
               <div class="feat-meta">${feat.date} ${feat.time} 发布 · 数据持续更新</div>
-              <div class="plat-nums">${KEYS.filter(k => state.accounts.some(a => a.platform === k)).map(k => `<div class="plat-num">${picon(k)}<span>${fmt((feat.stats[k] || {}).views || 0)}</span></div>`).join('')}</div>
+              <div class="plat-nums">${(() => {
+                const rows = KEYS.map(k => ({ k, v: (feat.stats[k] || {}).views || 0 })).filter(r => r.v > 0).sort((a, b) => b.v - a.v);
+                const top = rows.slice(0, 5), rest = rows.slice(5);
+                return top.map(r => `<div class="plat-num">${picon(r.k)}<span>${fmt(r.v)}</span></div>`).join('')
+                  + (rest.length ? `<div class="plat-num plat-num-more">+${rest.length} 平台<span>${fmt(sum(rest.map(r => r.v)))}</span></div>` : '');
+              })()}</div>
               <div class="metrics">
                 <div class="metric"><div class="m-label">全平台播放</div><div class="m-val">${fmt(featAgg.views)}</div></div>
                 <div class="metric"><div class="m-label">互动（赞评藏转）</div><div class="m-val">${fmt(featAgg.likes + featAgg.comments + featAgg.saves + featAgg.shares)}</div></div>
@@ -990,25 +1406,13 @@ tbody tr:hover{background:#fafbff}
         </div>
       </section>
       <section class="week-strip">
-        <div class="stat"><div class="ico" style="background:#eef3ff;color:#2f6bff">✎</div><div><div class="lbl">发布数量（7天）</div><div class="val">${week.length} <span style="font-size:12px;color:#9a9ab0">条</span></div><div class="sub">上周 ${prevWeek.length} 条</div></div></div>
-        <div class="stat"><div class="ico" style="background:#eaf8f1;color:#12a06a">▶</div><div><div class="lbl">全平台播放（7天）</div><div class="val">${fmt(wViews)}</div><div class="sub ${pViews ? (wViews >= pViews ? 'up' : 'down') : ''}">${pViews ? (wViews >= pViews ? '↑' : '↓') + Math.abs(Math.round((wViews / pViews - 1) * 100)) + '% vs 上周' : '暂无上周数据'}</div></div></div>
-        <div class="stat"><div class="ico" style="background:#fff1e6;color:#f59e0b">✦</div><div><div class="lbl">互动总量（7天）</div><div class="val">${fmt(wEng)}</div><div class="sub">互动率 ${wViews ? (wEng / wViews * 100).toFixed(1) : '0.0'}%</div></div></div>
-        <div class="stat"><div class="mini-cover">${esc(trunc(hot ? hot.cover : '暂无', 8))}</div><div style="min-width:0"><div class="lbl">最热素材（7天）</div><div class="val" style="font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(hot ? hot.title : '—')}</div><div class="sub">${fmt(hot ? postTotal(hot) : 0)} 播放</div></div></div>
-      </section>
-      <section class="plat-grid">
-        ${PLATFORMS.filter(p => state.accounts.some(a => a.platform === p.key)).map(p => {
-          const a = platformAgg(p.key);
-          return `<div class="pcard" data-action="filter-platform" data-key="${p.key}" style="cursor:pointer">
-            <div class="pc-head">${picon(p.key)}<span class="pname">${p.name}</span><span class="card-sub" style="margin-left:auto">${a.count ? '粉丝' : ''}</span></div>
-            <div class="pc-follow">${fmt(a.followers)}</div>
-            <div class="pc-chips"><span class="pc-chip">今日 <b class="up">+${fmt(a.today)}</b></span><span class="pc-chip">7天 <b class="up">+${fmt(a.week)}</b></span></div>
-            ${sparkline(a.series.slice(-30), p.color)}
-            <div class="pc-foot"><div>近7日播放<b>${fmt(sum(recentPosts(7).map(x => (x.stats[p.key] || {}).views || 0)))}</b></div><div>互动率<b>${a.rate.toFixed(1)}%</b></div></div>
-          </div>`;
-        }).join('')}
+        <div class="stat"><div class="ico" style="background:#e8f1fd;color:#0071e3">✎</div><div><div class="lbl">发布数量（7天）</div><div class="val">${week.length} <span style="font-size:12px;color:#a1a1a6">条</span></div><div class="sub">上周 ${prevWeek.length} 条</div></div></div>
+        <div class="stat"><div class="ico" style="background:#e6f5ef;color:#1d9d74">▶</div><div><div class="lbl">全平台播放（7天）</div><div class="val">${fmt(wViews)}</div><div class="sub ${pViews ? (wViews >= pViews ? 'up' : 'down') : ''}">${pViews ? (wViews >= pViews ? '↑' : '↓') + Math.abs(Math.round((wViews / pViews - 1) * 100)) + '% vs 上周' : '暂无上周数据'}</div></div></div>
+        <div class="stat"><div class="ico" style="background:#fff2e0;color:#e08a00">✦</div><div><div class="lbl">互动总量（7天）</div><div class="val">${fmt(wEng)}</div><div class="sub">互动率 ${wViews ? (wEng / wViews * 100).toFixed(1) : '0.0'}%</div></div></div>
+        <div class="stat"><div class="mini-cover">${esc(trunc(hot ? hot.cover : '暂无', 8))}</div><div style="min-width:0"><div class="lbl">最热素材（7天）</div><div class="val stat-title">${esc(hot ? hot.title : '—')}</div><div class="sub">${fmt(hot ? postTotal(hot) : 0)} 播放</div></div></div>
       </section>
       <section class="card mt14">
-        <div class="card-head"><div class="card-title">近期内容明细</div><div class="card-sub">按发布时间倒序 · 点击平台卡片可筛选</div></div>
+        <div class="card-head"><div class="card-title">近期内容明细</div><div class="card-sub">按发布时间倒序 · 点击上方平台卡片进入该平台多账号分析</div></div>
         ${postTable(state.filterKey ? published().filter(p => (p.stats[state.filterKey] || {}).views > 0) : published().slice(0, 8))}
       </section>`;
   }
@@ -1030,16 +1434,20 @@ tbody tr:hover{background:#fafbff}
       });
       return { name: PMAP[k].name, color: PMAP[k].color, values: vals };
     });
+    const seriesTop = groupSeries(series, 6);
     const wk = recentPosts(7);
-    const donutItems = KEYS.filter(k => state.accounts.some(a => a.platform === k)).map(k => ({ name: PMAP[k].name, color: PMAP[k].color, value: sum(wk.map(p => (p.stats[k] || {}).views || 0)) })).filter(x => x.value > 0);
+    const rawDonut = KEYS.filter(k => state.accounts.some(a => a.platform === k)).map(k => ({ name: PMAP[k].name, color: PMAP[k].color, value: sum(wk.map(p => (p.stats[k] || {}).views || 0)) })).filter(x => x.value > 0).sort((a, b) => b.value - a.value);
+    const donutItems = rawDonut.length > 8
+      ? rawDonut.slice(0, 7).concat([{ name: '其他', color: '#C7C7CC', value: sum(rawDonut.slice(7).map(x => x.value)) }])
+      : rawDonut;
     return `
       <div class="view-head"><div><h1>流量</h1><p>发布节奏、播放走势与平台流量结构</p></div>
         <div class="pill-row">${[7, 14, 30].map(r => `<button class="pill ${state.range === r ? 'on' : ''}" data-action="range" data-range="${r}">近 ${r} 天</button>`).join('')}</div>
       </div>
       <section class="grid g-traffic">
         <div class="card">
-          <div class="card-head"><div><div class="card-title">播放走势（按平台）</div><div class="card-sub">按发布后 8 天衰减模型估算每日播放</div></div><div class="legend">${series.map(s => `<span><i style="background:${s.color}"></i>${s.name}</span>`).join('')}</div></div>
-          ${lineChart(dates, series, { area: true })}
+          <div class="card-head"><div><div class="card-title">播放走势（按平台）</div><div class="card-sub">按发布后 8 天衰减模型估算每日播放</div></div><div class="legend">${seriesTop.map(s => `<span><i style="background:${s.color}"></i>${s.name}</span>`).join('')}</div></div>
+          ${lineChart(dates, seriesTop, { area: true })}
         </div>
         <div class="card">
           <div class="card-head"><div class="card-title">平台流量结构（7天）</div><div class="card-sub">${fmt(sum(donutItems.map(x => x.value)))} 次播放</div></div>
@@ -1049,7 +1457,7 @@ tbody tr:hover{background:#fafbff}
       </section>
       <section class="card mt14">
         <div class="card-head"><div class="card-title">发布节奏（近 14 天）</div><div class="card-sub">共 ${sum(counts)} 条已发布内容</div></div>
-        ${barChart(labels, counts, '#6c8cff')}
+        ${barChart(labels, counts, '#0071e3')}
       </section>
       <section class="card mt14">
         <div class="card-head"><div class="card-title">平台数据明细</div><div class="card-sub">近 7 天已发布内容汇总</div></div>
@@ -1070,6 +1478,7 @@ tbody tr:hover{background:#fafbff}
         <div class="cal-head"><button data-action="month-prev">‹</button><div class="cal-title">${y} 年 ${m + 1} 月</div><button data-action="month-next">›</button><button class="btn btn-primary" data-action="open-post">+ 新增内容</button></div>
       </div>
       <div class="card">
+        <div class="cal-scroll">
         <div class="cal-grid">${['周一', '周二', '周三', '周四', '周五', '周六', '周日'].map(d => `<div class="cal-dow">${d}</div>`).join('')}</div>
         <div class="cal-grid" style="margin-top:6px">
           ${cells.map(d => {
@@ -1083,8 +1492,10 @@ tbody tr:hover{background:#fafbff}
             </div>`;
           }).join('')}
         </div>
+        </div>
+        <div class="cal-hint">左右滑动查看整月 →</div>
       </div>
-      <div class="pill-row" style="margin-top:14px">
+      <div class="pill-row">
         <span class="chip"><i class="dot green"></i>已发布</span><span class="chip"><i class="dot blue"></i>已定时</span><span class="chip"><i class="dot orange"></i>等待点布</span><span class="chip"><i class="dot gray"></i>计划中</span><span class="chip"><i class="dot red"></i>异常</span>
       </div>`;
   }
@@ -1107,7 +1518,7 @@ tbody tr:hover{background:#fafbff}
         </div>
         <div class="card">
           <div class="card-head"><div><div class="card-title">播放走势</div><div class="card-sub">全平台每日播放估算 · 近 30 天</div></div></div>
-          ${lineChart(dv.map(x => x.date), [{ name: '全平台播放', color: '#3b6bff', values: dv.map(x => x.value) }], { area: true })}
+          ${lineChart(dv.map(x => x.date), [{ name: '全平台播放', color: '#0071e3', values: dv.map(x => x.value) }], { area: true })}
           <div class="sec-label" style="margin-top:18px">内容复盘 · 最近 6 条</div>
           <div class="tbl-wrap"><table><thead><tr><th>内容</th><th>发布时间</th><th>全平台播放</th><th>互动率</th><th>相对上一条</th></tr></thead><tbody>
             ${ps.map((p, i) => {
@@ -1124,22 +1535,35 @@ tbody tr:hover{background:#fafbff}
 
   /* ============ 视图：账号 ============ */
   function viewAccounts() {
+    const realN = state.accounts.filter(a => a.real).length;
     return `
-      <div class="view-head"><div><h1>账号管理</h1><p>导入各平台账号后可自动汇总统计 · 数据仅存于本机浏览器</p></div>
+      <div class="view-head"><div><h1>账号管理</h1><p>从平台主页链接导入真实账号 · 数据存于本机浏览器</p></div>
         <div class="pill-row"><button class="btn btn-ghost" data-action="export">导出数据</button><button class="btn btn-ghost" data-action="import">导入数据</button><button class="btn btn-danger" data-action="reset">重置示例</button></div>
       </div>
       <section class="grid g-traffic">
         <div class="card">
-          <div class="card-head"><div class="card-title">已接入账号（${state.accounts.length}）</div><div class="card-sub">粉丝总数 ${fmt(totalFans())}</div></div>
+          <div class="card-head"><div class="card-title">已接入账号（${state.accounts.length}）</div><div class="card-sub">真实 ${realN} · 示例 ${state.accounts.length - realN} · 粉丝总数 ${fmt(totalFans())}</div></div>
           <div class="acc-list">${state.accounts.map(a => `
-            <div class="acc-row">${picon(a.platform)}<div style="flex:1;min-width:0"><div class="acc-name">${esc(a.name)}</div><div class="acc-handle">${esc(a.handle)} · ${PMAP[a.platform].name}</div></div>
-              <div style="text-align:right"><div class="acc-fans">${fmt(a.followers)}</div><div class="acc-handle">今日 +${fmt((a.history || []).slice(-1)[0] ? (a.history || []).slice(-1)[0].delta : 0)}</div></div>
+            <div class="acc-row">${picon(a.platform)}<div style="flex:1;min-width:0"><div class="acc-name">${esc(a.name)} ${a.real ? '<span class="src-badge real">真实</span>' : '<span class="src-badge demo">示例</span>'}</div><div class="acc-handle">${esc(a.handle)} · ${PMAP[a.platform].name}${a.lastSync ? ' · ' + a.lastSync + ' 同步' : ''}</div></div>
+              <div style="text-align:right"><div class="acc-fans">${fmt(a.followers)}</div><div class="acc-handle">今日 ${((a.history || []).slice(-1)[0] ? (a.history || []).slice(-1)[0].delta : 0) >= 0 ? '+' : ''}${fmt((a.history || []).slice(-1)[0] ? (a.history || []).slice(-1)[0].delta : 0)}</div></div>
               <button class="btn btn-danger" data-action="del-account" data-id="${a.id}">移除</button>
             </div>`).join('') || '<div class="hint">还没有账号，请在右侧导入。</div>'}</div>
         </div>
         <div>
           <div class="card">
-            <div class="card-head"><div class="card-title">添加单个账号</div></div>
+            <div class="card-head"><div><div class="card-title">从主页链接导入</div><div class="card-sub">真实抓取粉丝数，非模拟</div></div></div>
+            <div class="form-row">
+              <div class="field"><label>平台</label><select id="rsPlatform">${PLATFORMS.map(p => `<option value="${p.key}"${state.presetPlatform === p.key ? ' selected' : ''}>${p.name}</option>`).join('')}</select></div>
+              <div class="field" style="flex:2;min-width:220px"><label>主页链接 / 账号标识</label><input id="rsInput" placeholder="https://space.bilibili.com/2"></div>
+            </div>
+            <div class="pill-row" style="margin-bottom:10px">
+              <button class="btn btn-primary" data-action="resolve-account">抓取并导入</button>
+              <button class="btn btn-ghost" data-action="sync-accounts">同步全部真实账号</button>
+            </div>
+            <div class="hint" id="rsStatus">需要本机运行发布中心（双击「启动发布中心.bat」）。B站、Discord、YouTube、X、Instagram、TikTok、Reddit 走公开接口；抖音、小红书走本机登录态浏览器。</div>
+          </div>
+          <div class="card mt14">
+            <div class="card-head"><div class="card-title">手动添加</div><div class="card-sub">没有公开主页时用</div></div>
             <div class="form-row">
               <div class="field"><label>平台</label><select id="accPlatform">${PLATFORMS.map(p => `<option value="${p.key}">${p.name}</option>`).join('')}</select></div>
               <div class="field"><label>账号名称</label><input id="accName" placeholder="例如：B站 · 主账号"></div>
@@ -1153,12 +1577,177 @@ tbody tr:hover{background:#fafbff}
           <div class="card mt14">
             <div class="card-head"><div class="card-title">批量导入</div><div class="card-sub">每行一个账号</div></div>
             <div class="field"><label>格式：平台, 账号名称, 粉丝数</label><textarea id="bulkText" placeholder="B站, 我的小号, 12000&#10;小红书, 品牌号, 8600"></textarea></div>
-            <div class="hint" style="margin:10px 0">平台可用：${PLATFORMS.map(p => p.name).join(' / ')}。粉丝数可省略，默认 0。导入后系统按粉丝量生成近 30 天增长基线。</div>
+            <div class="hint" style="margin:10px 0">平台可用：${PLATFORMS.map(p => p.name).join(' / ')}。粉丝数请填真实值，留空会记为 0。</div>
             <button class="btn btn-primary" data-action="bulk-import">批量导入</button>
           </div>
         </div>
       </section>
-      <div class="card mt14"><div class="hint">说明：当前为本地演示工具，平台数据为模拟数据。若要接入真实账号，需要各平台开放接口与授权凭证；导出/导入功能可用于在多台设备间迁移这份数据。</div></div>`;
+      <div class="card mt14"><div class="hint">「真实」标记的账号：粉丝数来自平台实时抓取，每次同步会记录当天变化，趋势从导入当天开始累积（历史数据无法回溯）。「示例」标记的账号为演示数据，可随时移除。视频号没有公开主页，只能手动填写。</div></div>`;
+  }
+
+  /* ============ 视图：单平台详情（多账号） ============ */
+  const ACC_COLORS = ['#0071e3', '#7c5cff', '#1d9d74', '#f08c00', '#e5484d', '#00a1d6', '#e1306c', '#5865f2'];
+  function accStat(a, dates) {
+    const h = a.history || [];
+    const m = Object.fromEntries(h.map(x => [x.date, x.delta || 0]));
+    const fans = +a.followers || 0;
+    const d30 = sum(dates.slice(-30).map(d => m[d] || 0));
+    const base = fans - d30;
+    const last = h[h.length - 1];
+    return {
+      fans, d30, w7: sum(dates.slice(-7).map(d => m[d] || 0)),
+      today: last ? (last.delta || 0) : 0,
+      grow: base > 0 ? d30 / base * 100 : 0,
+      lastSync: a.lastSync || ''
+    };
+  }
+  function viewPlatform() {
+    const key = state.platformKey, p = PMAP[key];
+    if (!p) { state.activeView = 'dashboard'; return viewDashboard(); }
+    const accs = state.accounts.filter(a => a.platform === key)
+      .sort((a, b) => (+b.followers || 0) - (+a.followers || 0));
+    const agg = platformAgg(key), total = agg.followers;
+    const wk = recentPosts(7);
+    const pv = sum(wk.map(x => (x.stats[key] || {}).views || 0));
+    const e7 = sum(wk.map(x => { const s = x.stats[key] || {}; return (s.likes || 0) + (s.comments || 0) + (s.saves || 0) + (s.shares || 0); }));
+    const rate7 = pv ? e7 / pv * 100 : 0;
+    const prevWk = published().filter(x => x.date >= dateKey(addDays(today(), -14)) && x.date < dateKey(addDays(today(), -7)));
+    const pvPrev = sum(prevWk.map(x => (x.stats[key] || {}).views || 0));
+    const hist = historyOf(key);
+    const dates = hist.slice(-30).map(h => h.date);
+    const dm = Object.fromEntries(hist.map(h => [h.date, h.delta]));
+    const d30 = sum(hist.slice(-30).map(h => h.delta));
+    const accSeries = accs.map((a, i) => {
+      const m = Object.fromEntries((a.history || []).map(h => [h.date, h.delta || 0]));
+      return { name: a.name, color: ACC_COLORS[i % ACC_COLORS.length], values: dates.map(d => m[d] || 0) };
+    });
+    // 由当前粉丝总数按每日净增反推累计曲线
+    const cum = []; let cv = total;
+    for (let i = dates.length - 1; i >= 0; i--) { cum[i] = cv; cv -= (dm[dates[i]] || 0); }
+    const platPosts = published().filter(x => (x.stats[key] || {}).views > 0)
+      .sort((a, b) => ((b.stats[key] || {}).views || 0) - ((a.stats[key] || {}).views || 0));
+    // 全站 7 天互动率基线，用于对比该平台
+    const stViews = sum(KEYS.map(k => sum(wk.map(x => (x.stats[k] || {}).views || 0))));
+    const stEng = sum(KEYS.map(k => sum(wk.map(x => { const s = x.stats[k] || {}; return (s.likes || 0) + (s.comments || 0) + (s.saves || 0) + (s.shares || 0); }))));
+    const stRate = stViews ? stEng / stViews * 100 : 0;
+    // 该平台表现最好的星期
+    const DOW = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    const dow = DOW.map(n => ({ n, cnt: 0, v: 0 }));
+    platPosts.forEach(x => { const i = new Date(x.date + 'T00:00:00').getDay(); dow[i].cnt++; dow[i].v += (x.stats[key] || {}).views || 0; });
+    const bestDow = dow.filter(o => o.cnt).sort((a, b) => b.v / b.cnt - a.v / a.cnt)[0];
+    const KPI = [
+      { l: '粉丝总数', v: fmt(total), s: `${accs.length} 个账号`, cls: '' },
+      { l: '今日净增', v: (agg.today >= 0 ? '+' : '') + fmt(agg.today), s: agg.today >= 0 ? '较昨日' : '较昨日下滑', cls: agg.today >= 0 ? 'up' : 'down' },
+      { l: '近 7 天', v: (agg.week >= 0 ? '+' : '') + fmt(agg.week), s: '粉丝净增', cls: agg.week >= 0 ? 'up' : 'down' },
+      { l: '近 30 天', v: (d30 >= 0 ? '+' : '') + fmt(d30), s: '粉丝净增', cls: d30 >= 0 ? 'up' : 'down' },
+      { l: '7 天播放', v: fmt(pv), s: pvPrev ? `${pv >= pvPrev ? '↑' : '↓'}${Math.abs(Math.round((pv / pvPrev - 1) * 100))}% 环比上周` : '暂无上周数据', cls: '' },
+      { l: '互动率', v: rate7.toFixed(1) + '%', s: `全站 ${stRate.toFixed(1)}%`, cls: '' }
+    ];
+    const ins = [];
+    if (accs.length > 1) {
+      const topSh = total ? (+accs[0].followers || 0) / total * 100 : 0;
+      ins.push({ tag: '账号结构', cls: topSh >= 70 ? 'o' : 'b', html: `<b>${esc(trunc(accs[0].name, 12))}</b> 占该平台粉丝 <b>${Math.round(topSh)}%</b>${topSh >= 70 ? '，集中度偏高，新号还接不住流量' : '，账号分布相对健康'}。` });
+      const fast = accs.map(a => ({ a, s: accStat(a, dates) })).sort((x, y) => y.s.d30 - x.s.d30)[0];
+      ins.push({ tag: '增速', cls: 'g', html: `近 30 天涨粉最快的是 <b>${esc(trunc(fast.a.name, 12))}</b> +${fmt(fast.s.d30)}，增速 <b>${fast.s.grow.toFixed(1)}%</b>。` });
+    } else {
+      ins.push({ tag: '账号结构', cls: 'o', html: `该平台只有 <b>1 个账号</b>，无法做账号间对比。建议再导入一个账号（矩阵号 / 子号），才能看出内容与账号的匹配度。` });
+    }
+    if (pvPrev) ins.push({ tag: '播放', cls: 'b', html: `7 天播放 <b>${fmt(pv)}</b>，上周同期 ${fmt(pvPrev)}，${pv >= pvPrev ? '环比上升' : '环比下降'} <b>${Math.abs(Math.round((pv / pvPrev - 1) * 100))}%</b>。` });
+    else ins.push({ tag: '播放', cls: 'b', html: `7 天播放 <b>${fmt(pv)}</b>，暂无上周同期数据可对比。` });
+    if (bestDow) ins.push({ tag: '节奏', cls: 'g', html: `该平台单条均播最高的星期是 <b>${bestDow.n}</b>（${fmt(Math.round(bestDow.v / bestDow.cnt))} 播放/条，共 ${bestDow.cnt} 条），建议把重点内容排到这一天。` });
+    ins.push({ tag: '互动', cls: 'b', html: `7 天互动率 <b>${rate7.toFixed(1)}%</b>，${rate7 >= stRate ? '高于' : '低于'}全站平均 ${stRate.toFixed(1)}%${rate7 >= stRate ? '，可把这个平台当主阵地优先首发' : '，建议先优化开头 3 秒与封面文案'}。` });
+    return `
+      <div class="view-head">
+        <div>
+          <button class="pf-back" data-action="back-dashboard">‹ 数据大屏</button>
+          <h1 class="pf-title">${picon(key, 'width:30px;height:30px;font-size:14px;border-radius:9px')}<span>${p.name}</span></h1>
+          <p>${accs.length} 个账号 · 粉丝合计 ${fmt(total)} · 近 30 天数据 · ${platPosts.length} 条已发布内容</p>
+        </div>
+        <div class="pill-row">
+          ${accs.some(a => a.real && a.url) ? '<button class="btn btn-ghost" data-action="sync-platform">同步该平台账号</button>' : ''}
+          <button class="btn btn-primary" data-action="import-for-platform">+ 导入账号</button>
+        </div>
+      </div>
+      <section class="kpi-grid">
+        ${KPI.map(k => `<div class="kpi"><div class="k-lbl">${k.l}</div><div class="k-val ${k.cls}">${k.v}</div><div class="k-sub">${k.s}</div></div>`).join('')}
+      </section>
+      <section class="card">
+        <div class="card-head"><div><div class="card-title">账号对比</div><div class="card-sub">${accs.length > 1 ? '按粉丝数排序 · 同一平台横向对比' : '该平台目前只有 1 个账号，再导入一个即可对比'}</div></div><div class="card-sub">合计 ${fmt(total)} 粉丝</div></div>
+        <div class="acc-cards">
+          ${accs.map((a, i) => {
+            const s = accStat(a, dates), sh = total ? (+a.followers || 0) / total * 100 : 0;
+            return `<div class="acc-card">
+              <div class="ac-top"><span class="ac-dot" style="background:${ACC_COLORS[i % ACC_COLORS.length]}"></span>
+                <div style="flex:1;min-width:0"><div class="acc-name">${esc(trunc(a.name, 14))}${i === 0 && accs.length > 1 ? '<span class="ac-rank">主力</span>' : ''}</div>
+                <div class="acc-handle">${esc(a.handle)} ${a.real ? '<span class="src-badge real">真实</span>' : '<span class="src-badge demo">示例</span>'}</div></div></div>
+              <div class="ac-fans">${fmt(s.fans)}</div>
+              <div class="ac-share"><div class="ac-track"><i style="width:${Math.max(2, sh).toFixed(1)}%;background:${ACC_COLORS[i % ACC_COLORS.length]}"></i></div><span>${sh.toFixed(1)}%</span></div>
+              <div class="ac-stats">
+                <div><div class="ac-l">今日</div><div class="ac-v ${s.today >= 0 ? 'up' : 'down'}">${s.today >= 0 ? '+' : ''}${fmt(s.today)}</div></div>
+                <div><div class="ac-l">7 天</div><div class="ac-v ${s.w7 >= 0 ? 'up' : 'down'}">${s.w7 >= 0 ? '+' : ''}${fmt(s.w7)}</div></div>
+                <div><div class="ac-l">30 天</div><div class="ac-v ${s.d30 >= 0 ? 'up' : 'down'}">${s.d30 >= 0 ? '+' : ''}${fmt(s.d30)}</div></div>
+              </div>
+              ${accSeries[i].values.length >= 2 ? sparkline(accSeries[i].values, ACC_COLORS[i % ACC_COLORS.length]) : ''}
+              <div class="ac-foot"><span>增速 ${s.grow.toFixed(1)}%</span><span>${s.lastSync ? s.lastSync + ' 同步' : '未同步'}</span>${a.real && a.url ? `<button class="ac-sync" data-action="sync-account" data-id="${a.id}">同步</button>` : ''}</div>
+            </div>`;
+          }).join('') || '<div class="hint">该平台还没有账号。</div>'}
+          ${accs.length === 1 ? `<div class="acc-card acc-add" data-action="import-for-platform"><div class="ac-add-t">+ 导入第二个账号</div><div class="ac-add-sub">有对比才看得出账号差异</div></div>` : ''}
+        </div>
+        <div class="chart-note">粉丝与涨粉是账号维度；播放 / 互动等内容数据是平台维度（同平台多账号合并统计，发布时未绑定具体账号）。</div>
+      </section>
+      <section class="grid g-pf">
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">各账号粉丝日增</div><div class="card-sub">近 30 天净增 · 堆叠</div></div>
+            <div class="legend">${accSeries.map(s => `<span><i style="background:${s.color}"></i>${esc(trunc(s.name, 7))}</span>`).join('')}</div></div>
+          ${dates.length >= 2 ? stackedChart(dates, accSeries) : '<div class="hint">历史数据不足：真实账号从导入当天开始累积，同步 2 天以上即可看到趋势。</div>'}
+        </div>
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">账号粉丝占比</div><div class="card-sub">谁是这个平台的主力</div></div></div>
+          ${total > 0 ? `<div class="donut-wrap">${donutChart(accs.map((a, i) => ({ name: a.name, color: ACC_COLORS[i % ACC_COLORS.length], value: +a.followers || 0 })), { label: '粉丝合计' })}<div class="donut-list">${accs.map((a, i) => `<div class="donut-item"><i style="background:${ACC_COLORS[i % ACC_COLORS.length]}"></i><span class="nm">${esc(trunc(a.name, 10))}</span><b>${Math.round((+a.followers || 0) / total * 100)}%</b></div>`).join('')}</div></div>` : '<div class="hint">还没有粉丝数据。</div>'}
+        </div>
+      </section>
+      <section class="grid g-pf-wide">
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">累计粉丝曲线</div><div class="card-sub">按每日净增反推 · 近 30 天</div></div></div>
+          ${dates.length >= 2 ? lineChart(dates, [{ name: p.name, color: p.color, values: cum }], { area: true, zoom: true }) : '<div class="hint">数据不足。</div>'}
+        </div>
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">互动结构（7 天）</div><div class="card-sub">赞 / 评 / 藏 / 转</div></div></div>
+          ${(() => {
+            const s = { likes: 0, comments: 0, saves: 0, shares: 0 };
+            wk.forEach(x => { const t = x.stats[key] || {}; ['likes', 'comments', 'saves', 'shares'].forEach(f => { s[f] += t[f] || 0; }); });
+            const items = [{ name: '点赞', color: '#0071e3', value: s.likes }, { name: '评论', color: '#7c5cff', value: s.comments }, { name: '收藏', color: '#1d9d74', value: s.saves }, { name: '转发', color: '#f08c00', value: s.shares }].filter(x => x.value > 0);
+            if (!items.length) return '<div class="hint">近 7 天该平台暂无互动数据。</div>';
+            const tt = sum(items.map(y => y.value));
+            return `<div class="donut-wrap">${donutChart(items, { label: '总互动' })}<div class="donut-list">${items.map(x => `<div class="donut-item"><i style="background:${x.color}"></i><span class="nm">${x.name}</span><b>${Math.round(x.value / (tt || 1) * 100)}%</b></div>`).join('')}</div></div>`;
+          })()}
+          <div class="chart-note">评论占比高说明话题性强，收藏占比高说明工具性强，可直接指导选题。</div>
+        </div>
+      </section>
+      <section class="grid g-pf-wide">
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">单条内容表现</div><div class="card-sub">该平台播放 Top ${Math.min(6, platPosts.length) || 0}</div></div></div>
+          ${platPosts.length ? `<div class="hbar-list">${platPosts.slice(0, 6).map(x => {
+            const v = (x.stats[key] || {}).views || 0, mx = (platPosts[0].stats[key] || {}).views || 1;
+            return `<div class="hbar-row"><div class="hb-title">${esc(trunc(x.title, 18))}<span>${x.date}</span></div><div class="hb-track"><i style="width:${Math.max(3, v / mx * 100).toFixed(1)}%;background:${p.color}"></i></div><div class="hb-val">${fmt(v)}</div></div>`;
+          }).join('')}</div>` : '<div class="hint">该平台还没有已发布内容。</div>'}
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">平台洞察</div><div class="card-sub">按当前数据自动计算</div></div>
+          <div class="insight-list">${ins.map(i => `<div class="insight"><span class="tag ${i.cls}">${i.tag}</span>${i.html}</div>`).join('')}</div>
+        </div>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><div class="card-title">该平台内容明细</div><div class="card-sub">共 ${platPosts.length} 条 · 按该平台播放排序</div></div></div>
+        ${platPosts.length ? `<div class="tbl-wrap"><table><thead><tr><th>内容</th><th>发布时间</th><th>该平台播放</th><th>赞</th><th>评论</th><th>收藏</th><th>转发</th><th>互动率</th><th>占全站播放</th></tr></thead><tbody>
+          ${platPosts.map(x => {
+            const s = x.stats[key] || {}, v = s.views || 0;
+            const all = postTotal(x) || 1;
+            const r = v ? ((s.likes || 0) + (s.comments || 0) + (s.saves || 0) + (s.shares || 0)) / v * 100 : 0;
+            return `<tr><td>${esc(trunc(x.title, 18))}</td><td>${x.date} ${x.time || ''}</td><td><b>${fmt(v)}</b></td><td>${fmt(s.likes || 0)}</td><td>${fmt(s.comments || 0)}</td><td>${fmt(s.saves || 0)}</td><td>${fmt(s.shares || 0)}</td><td class="up">${r.toFixed(1)}%</td><td>${(v / all * 100).toFixed(1)}%</td></tr>`;
+          }).join('')}
+        </tbody></table></div>` : '<div class="hint">暂无数据。</div>'}
+      </section>`;
   }
 
   /* ============ 表格 ============ */
@@ -1185,7 +1774,7 @@ tbody tr:hover{background:#fafbff}
   }
 
   /* ============ 渲染 & 弹窗 ============ */
-  const VIEWS = { dashboard: viewDashboard, traffic: viewTraffic, calendar: viewCalendar, insights: viewInsights, accounts: viewAccounts };
+  const VIEWS = { dashboard: viewDashboard, platform: viewPlatform, traffic: viewTraffic, calendar: viewCalendar, insights: viewInsights, accounts: viewAccounts };
   function render() {
     if (state.activeView === 'publish' && window.PublishCenter) {
       $$('#navTabs button').forEach(b => b.classList.toggle('active', b.dataset.view === 'publish'));
@@ -1196,7 +1785,9 @@ tbody tr:hover{background:#fafbff}
     }
     if (window.PublishCenter) window.PublishCenter.stopPolling();
     $('#mainContent').innerHTML = VIEWS[state.activeView]();
-    $$('#navTabs button').forEach(b => b.classList.toggle('active', b.dataset.view === state.activeView));
+    // 平台详情是「数据大屏」的下级页面，导航上仍高亮大屏
+    const navKey = state.activeView === 'platform' ? 'dashboard' : state.activeView;
+    $$('#navTabs button').forEach(b => b.classList.toggle('active', b.dataset.view === navKey));
     const d = new Date(), wd = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()];
     $('#clock').textContent = `${d.getMonth() + 1}/${d.getDate()} ${wd} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   }
@@ -1230,6 +1821,37 @@ tbody tr:hover{background:#fafbff}
     if (a === 'close-mask' && e.target.closest('[data-stop]')) return;
     if (a === 'close-modal' || a === 'close-mask') { closeModal(); return; }
     if (a === 'range') { state.range = +t.dataset.range; saveState(); render(); return; }
+    if (a === 'open-platform') { state.platformKey = t.dataset.key; state.activeView = 'platform'; saveState(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (a === 'back-dashboard') { state.activeView = 'dashboard'; saveState(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (a === 'import-for-platform') { state.presetPlatform = state.platformKey; state.activeView = 'accounts'; saveState(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (a === 'sync-platform') {
+      const list = state.accounts.filter(x => x.platform === state.platformKey && x.real && x.url);
+      if (!list.length) { toast('该平台还没有可同步的真实账号'); return; }
+      (async () => {
+        let ok = 0, fail = 0;
+        toast(`开始同步 ${list.length} 个账号…`);
+        for (let i = 0; i < list.length; i++) {
+          try {
+            const d = await localApi('/api/account/resolve', { platform: list[i].platform, input: list[i].url });
+            if (!d.ok) throw new Error(d.error || '失败');
+            applyReal(d, list[i].url); ok++;
+          } catch (e) { fail++; }
+        }
+        saveState(); render();
+        toast(`同步完成：成功 ${ok} 个${fail ? `，失败 ${fail} 个` : ''}`);
+      })();
+      return;
+    }
+    if (a === 'sync-account') {
+      const acc = state.accounts.find(x => x.id === t.dataset.id);
+      if (!acc || !acc.url) { toast('该账号没有主页链接，无法同步'); return; }
+      t.disabled = true; t.textContent = '同步中…';
+      localApi('/api/account/resolve', { platform: acc.platform, input: acc.url }).then(d => {
+        if (!d.ok) throw new Error(d.error || '抓取失败');
+        applyReal(d, acc.url); saveState(); render(); toast(`${acc.name} 已同步`);
+      }).catch(e => { t.disabled = false; t.textContent = '同步'; toast('同步失败：' + e.message); });
+      return;
+    }
     if (a === 'filter-platform') { state.filterKey = state.filterKey === t.dataset.key ? null : t.dataset.key; render(); return; }
     if (a === 'month-prev') { state.month = { y: state.month.m === 0 ? state.month.y - 1 : state.month.y, m: (state.month.m + 11) % 12 }; render(); return; }
     if (a === 'month-next') { state.month = { y: state.month.m === 11 ? state.month.y + 1 : state.month.y, m: (state.month.m + 1) % 12 }; render(); return; }
@@ -1245,11 +1867,45 @@ tbody tr:hover{background:#fafbff}
       saveState(); closeModal(); render(); toast('内容已保存'); return;
     }
     if (a === 'del-post') { state.posts = state.posts.filter(p => p.id !== t.dataset.id); saveState(); closeModal(); render(); toast('已删除'); return; }
+    if (a === 'resolve-account') {
+      const platform = $('#rsPlatform').value, input = $('#rsInput').value.trim();
+      if (!input) { rsStatus('请先粘贴该账号的主页链接', 'err'); return; }
+      rsStatus('正在抓取…（首次会启动专用 Chrome，可能需要十几秒）');
+      localApi('/api/account/resolve', { platform, input }).then(d => {
+        if (!d.ok) throw new Error(d.error || '抓取失败');
+        const acc = applyReal(d, input);
+        saveState(); render();
+        rsStatus(d.followers == null
+          ? `已导入 ${acc.name}，但该平台不公开粉丝数，请到列表里手动补填（${d.note || 'Reddit 个人主页不公开粉丝数'}）`
+          : `✓ 已导入 ${acc.name}：${fmt(acc.followers)} ${d.platform === 'discord' ? '成员' : '粉丝'}（${d.source || '实时抓取'}）${d.note ? ' · ' + d.note : ''}`,
+          d.followers == null ? 'err' : 'ok');
+        toast('账号已导入');
+      }).catch(e => rsStatus('✗ ' + e.message, 'err'));
+      return;
+    }
+    if (a === 'sync-accounts') {
+      const list = state.accounts.filter(x => x.real && x.url);
+      if (!list.length) { rsStatus('还没有可同步的真实账号，先在上方导入一个', 'err'); return; }
+      (async () => {
+        let ok = 0, fail = 0;
+        for (let i = 0; i < list.length; i++) {
+          rsStatus(`正在同步 ${i + 1}/${list.length}：${list[i].name}…`);
+          try {
+            const d = await localApi('/api/account/resolve', { platform: list[i].platform, input: list[i].url });
+            if (!d.ok) throw new Error(d.error || '失败');
+            applyReal(d, list[i].url); ok++;
+          } catch (e) { fail++; }
+        }
+        saveState(); render();
+        rsStatus(`同步完成：成功 ${ok} 个${fail ? '，失败 ' + fail + ' 个' : ''}`, fail ? 'err' : 'ok');
+      })();
+      return;
+    }
     if (a === 'add-account') {
       const platform = $('#accPlatform').value, name = $('#accName').value.trim() || PMAP[platform].name + ' · 账号';
       const handle = $('#accHandle').value.trim() || '@' + platform;
       const followers = Math.max(0, +$('#accFans').value || 0);
-      state.accounts.push({ id: 'acc_' + Math.random().toString(36).slice(2, 9), platform, name, handle, followers, history: genHistory(followers) });
+      state.accounts.push({ id: 'acc_' + Math.random().toString(36).slice(2, 9), platform, name, handle, followers, real: false, history: genHistory(followers) });
       saveState(); render(); toast('账号已添加'); return;
     }
     if (a === 'del-account') { state.accounts = state.accounts.filter(x => x.id !== t.dataset.id); saveState(); render(); toast('账号已移除'); return; }
@@ -1262,7 +1918,7 @@ tbody tr:hover{background:#fafbff}
         if (!p) return;
         const name = parts[1] || p.name + ' · 账号';
         const followers = Math.max(0, parseInt((parts[2] || '0').replace(/[^\d]/g, ''), 10) || 0);
-        state.accounts.push({ id: 'acc_' + Math.random().toString(36).slice(2, 9), platform: p.key, name, handle: '@' + p.key + n, followers, history: genHistory(followers) });
+        state.accounts.push({ id: 'acc_' + Math.random().toString(36).slice(2, 9), platform: p.key, name, handle: '@' + p.key + n, followers, real: false, history: genHistory(followers) });
         n++;
       });
       saveState(); render(); toast(`成功导入 ${n} 个账号`); return;
@@ -1301,12 +1957,14 @@ tbody tr:hover{background:#fafbff}
 
   /* ============ 启动 ============ */
   // 若处于发布中心视图，先等服务连接检测完成再渲染，避免误显示"离线"
+  let painted = false;
+  const paint = () => { painted = true; render(); };
   if (window.PublishCenter) {
-    window.PublishCenter.init().catch(() => {}).finally(() => render());
-    // 兜底：3 秒后无论如何重绘一次，防止 fetch 卡住
-    setTimeout(() => render(), 3000);
+    window.PublishCenter.init().catch(() => {}).finally(paint);
+    // 兜底：3 秒后仍未渲染过才补一次，避免把用户刚操作的提示刷掉
+    setTimeout(() => { if (!painted) paint(); }, 3000);
   } else {
-    render();
+    paint();
   }
 })();
 
