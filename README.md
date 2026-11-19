@@ -24,19 +24,37 @@ node publisher/server.js
 
 或双击 `启动发布中心.bat`，然后打开 `index.html` → 「发布中心」。
 
-## 部署（Cloudflare Pages）
+## 部署到 Cloudflare Pages
 
-本项目前端为纯静态站点，可直接部署到 Cloudflare Pages：
+仓库地址：`https://github.com/bobo-lie/social-dashboard`（公开）
+计划域名：**`social.lietrade.com`**（主域名 `lietrade.com` 的子域名，DNS 已在 Cloudflare）
 
-- **构建命令**：留空（无需构建）
-- **输出目录**：`/`（根目录）
-- **入口文件**：`index.html`
+### 方式一：一键部署（推荐）
 
-绑定自定义域名（如 `social.lietrade.com`）在 Cloudflare Pages 项目的
-`Custom domains` 中设置，DNS 会自动添加 CNAME 记录。
+双击 `一键部署.bat`，按提示粘贴两个 Token 即可自动完成：
+推送源码 → 创建 Pages 项目 → 上传站点 → 绑定域名。
 
-> 注意：发布中心依赖本机 Chrome 与登录态，**线上版本为只读数据看板**，
-> 自动发布功能仍需在本地运行。线上与本地的数据互不相通（数据保存在浏览器本地）。
+需要准备：
+
+1. **GitHub Token**：https://github.com/settings/tokens → Generate new token (classic) → 勾选 `repo`
+2. **Cloudflare Token**：https://dash.cloudflare.com/profile/api-tokens → Create Token →
+   用 `Edit Cloudflare Pages` 模板，并额外加 `Zone:DNS:Edit`（作用域选 `lietrade.com`）
+
+也可命令行运行：
+
+```bash
+node deploy/build.cjs
+GITHUB_TOKEN=xxx CLOUDFLARE_API_TOKEN=yyy node deploy/deploy.cjs
+```
+
+### 方式二：手动部署
+
+Cloudflare Dashboard → Workers & Pages → Create → Pages → Connect to Git →
+选 `bobo-lie/social-dashboard` → 构建命令留空、输出目录填 `deploy` → Deploy。
+完成后在项目的 Custom domains 添加 `social.lietrade.com`。
+
+> **发布中心**依赖本机 Chrome 与登录态，**线上版本为只读数据看板**，
+> 自动发布仍需本地运行。线上与本地数据互不相通（保存在各自浏览器 localStorage）。
 
 ## 数据说明
 
