@@ -1,18 +1,19 @@
 @echo off
 chcp 65001 >nul
-title 脉络 · 发布中心
+title Mailuo Publisher Center
 cd /d "%~dp0"
+
 echo.
-echo   ============================================
-echo      脉络 · 发布中心  正在启动...
-echo   ============================================
+echo   ==========================================
+echo      Mailuo Publisher Center  starting...
+echo   ==========================================
 echo.
+
 node publisher\server.js
-if errorlevel 1 (
-  echo.
-  echo   启动失败。请确认：
-  echo    1. 已安装 Node.js
-  echo    2. 8899 端口没有被占用
-  echo.
-  pause
-)
+
+echo.
+echo   ---- server stopped ----
+echo   * If "node" is not recognized: install Node.js first.
+echo   * If port 8899 is busy: close the program using it.
+echo.
+pause
