@@ -27,7 +27,10 @@ node publisher/server.js
 ## 部署到 Cloudflare Pages
 
 仓库地址：`https://github.com/bobo-lie/social-dashboard`（公开）
-计划域名：**`social.lietrade.com`**（主域名 `lietrade.com` 的子域名，DNS 已在 Cloudflare）
+线上地址：**`https://social.lietrade.com`**（已上线，DNS 托管在 Cloudflare）
+
+> 当前线上版本为 **Cloudflare Pages Direct Upload** 部署的自包含单文件站点
+> （`deploy/index.html`，CSS/JS 全部内联）。Pages 项目名 `social-dashboard`。
 
 ### 方式一：一键部署（推荐）
 
@@ -38,7 +41,8 @@ node publisher/server.js
 
 1. **GitHub Token**：https://github.com/settings/tokens → Generate new token (classic) → 勾选 `repo`
 2. **Cloudflare Token**：https://dash.cloudflare.com/profile/api-tokens → Create Token →
-   用 `Edit Cloudflare Pages` 模板，并额外加 `Zone:DNS:Edit`（作用域选 `lietrade.com`）
+   Start from scratch → Account policy → 权限组搜索 `Cloudflare Pages` →
+   Bulk Select → Add all Read & Write permissions（Pages 读写权限即可）
 
 也可命令行运行：
 
@@ -52,6 +56,11 @@ GITHUB_TOKEN=xxx CLOUDFLARE_API_TOKEN=yyy node deploy/deploy.cjs
 Cloudflare Dashboard → Workers & Pages → Create → Pages → Connect to Git →
 选 `bobo-lie/social-dashboard` → 构建命令留空、输出目录填 `deploy` → Deploy。
 完成后在项目的 Custom domains 添加 `social.lietrade.com`。
+
+**DNS 说明**：Pages 绑域名后 Cloudflare 不会自动建 CNAME，需到
+`lietrade.com → DNS → Records` 手动添加一条：
+`social`（CNAME）→ `<项目名>.pages.dev`（本项目为 `social-dashboard-5ly.pages.dev`）。
+当前这条记录已添加完成，后续重新部署无需重复操作。
 
 > **发布中心**依赖本机 Chrome 与登录态，**线上版本为只读数据看板**，
 > 自动发布仍需本地运行。线上与本地数据互不相通（保存在各自浏览器 localStorage）。
