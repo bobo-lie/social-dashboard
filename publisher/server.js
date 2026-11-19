@@ -6,6 +6,7 @@ const path = require('path');
 const store = require('./store');
 const engine = require('./engine');
 const notifier = require('./notifier');
+const resolver = require('./resolver');
 const { PLATFORMS } = require('./platforms');
 
 const ROOT = store.ROOT;
@@ -13,7 +14,7 @@ const PORT = process.env.PORT || 8899;
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp', '.mp4': 'video/mp4', '.webm': 'video/webm', '.mov': 'video/quicktime', '.ico': 'image/x-icon' };
 
 function json(res, code, data) {
-  res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'GET,POST,DELETE,OPTIONS' });
+  res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'GET,POST,DELETE,OPTIONS', 'Access-Control-Allow-Private-Network': 'true' });
   res.end(JSON.stringify(data));
 }
 function body(req, limit = 60 * 1024 * 1024) {
@@ -68,6 +69,20 @@ function serveStatic(req, res, pathname) {
 async function handleApi(req, res, url) {
   const p = url.pathname;
   if (req.method === 'OPTIONS') return json(res, 200, {});
+
+  if (p === '/api/ping') return json(res, 200, { ok: true, app: 'mailuo', version: 2 });
+
+  /* 账号真实抓取：解析主页链接 → 真实粉丝数 */
+  if (p === '/api/account/resolve' && req.method === 'POST') {
+    const d = JSON.parse((await body(req)).toString('utf8') || '{}');
+    try {
+      const r = await resolver.resolve(d.platform, d.input, store.readConfig());
+      return json(res, 200, r);
+    } catch (e) {
+      store.log(`[账号] 解析失败：${e.message}`);
+      return json(res, 200, { ok: false, platform: d.platform, error: e.message });
+    }
+  }
 
   if (p === '/api/config' && req.method === 'GET') return json(res, 200, { ok: true, config: store.readConfig(), platforms: PLATFORMS });
   if (p === '/api/config' && req.method === 'POST') {
@@ -188,3 +203,9 @@ server.listen(PORT, '127.0.0.1', () => {
   store.ensure(); store.log(`发布服务已启动 http://127.0.0.1:${PORT}`);
   console.log(`\n  发布中心已启动：http://127.0.0.1:${PORT}\n`);
 });
+
+// 退出时关闭自动化用的 Chrome，避免占用专用配置目录
+['SIGINT', 'SIGTERM'].forEach(sig => process.on(sig, async () => {
+  try { await engine.closeContext(); } catch (e) { /* ignore */ }
+  process.exit(0);
+}));
